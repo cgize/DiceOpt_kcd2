@@ -1,4 +1,4 @@
-# Optimizador de Dados para Farkle
+# Optimizador de Dados para KCD2
 
 Herramienta para determinar la mejor combinación de dados en el juego Farkle.
 
