@@ -1,17 +1,28 @@
+/* styles.css */
+:root {
+    --primary-dark: #0A192F;
+    --primary-color: #172A45;
+    --accent-color: #64FFDA;
+    --text-primary: #CCD6F6;
+    --text-secondary: #8892B0;
+    --border-color: #233554;
+}
+
 body { 
-    font-family: 'Arial', sans-serif; 
+    font-family: 'Segoe UI', system-ui, sans-serif;
     padding: 20px; 
     display: grid;
     grid-template-columns: 35% 65%;
     gap: 20px;
     max-width: 1200px;
     margin: 0 auto;
-    background: #fafafa;
+    background: var(--primary-dark);
+    color: var(--text-primary);
 }
 
 .sidebar { 
     padding-right: 20px; 
-    border-right: 2px solid #e0e0e0;
+    border-right: 2px solid var(--border-color);
     position: sticky;
     top: 20px;
     height: fit-content;
@@ -25,26 +36,26 @@ body {
 .section { 
     margin: 20px 0; 
     padding: 15px; 
-    border: 1px solid #e0e0e0; 
+    border: 1px solid var(--border-color); 
     border-radius: 8px;
-    background: white;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    background: var(--primary-color);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
 }
 
 .progress-bar {
     width: 100%;
     height: 30px;
-    background: #f0f0f0;
+    background: #112240;
     border-radius: 15px;
     overflow: hidden;
     margin: 15px 0;
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.08);
 }
 
 .progress-fill {
     height: 100%;
-    background: linear-gradient(to right, #4CAF50, #45a049);
+    background: linear-gradient(to right, var(--accent-color), #52D1A4);
     transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
 }
 
 #results { 
@@ -54,10 +65,11 @@ body {
 .result-item {
     margin: 15px 0;
     padding: 20px;
-    background: white;
+    background: var(--primary-color);
     border-radius: 12px;
-    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+    box-shadow: 0 3px 12px rgba(0,0,0,0.3);
     transition: transform 0.2s;
+    border: 1px solid var(--border-color);
 }
 
 .result-item:hover {
@@ -68,9 +80,10 @@ body {
     position: relative;
     padding: 12px;
     margin: 8px 0;
-    background: white;
+    background: #112240;
     border-radius: 10px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    border: 1px solid var(--border-color);
 }
 
 .die-table {
@@ -83,32 +96,39 @@ body {
 .die-table th, .die-table td {
     padding: 6px;
     font-size: 0.75em;
-    border-right: 1px solid #f0f0f0;
+    border-right: 1px solid var(--border-color);
     text-align: center;
-    background: white;
 }
 
 .die-table th {
-    background: #f8f8f8;
+    background: #1B2A4E;
     font-weight: 600;
-    color: #555;
+    color: var(--accent-color);
+    letter-spacing: 0.5px;
+}
+
+.die-table td {
+    background: #0F1D38;
+    color: var(--text-secondary);
 }
 
 button {
     padding: 10px 20px;
-    background: #4CAF50;
-    color: white;
+    background: var(--accent-color);
+    color: var(--primary-dark);
     border: none;
     border-radius: 6px;
     cursor: pointer;
-    font-weight: 500;
-    transition: all 0.2s;
-    margin: 5px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 button:hover {
-    background: #45a049;
-    box-shadow: 0 2px 8px rgba(76,175,80,0.3);
+    background: #52D1A4;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(100, 255, 218, 0.2);
 }
 
 #fillDice {
@@ -129,15 +149,16 @@ button:hover {
     width: 55px;
     height: 55px;
     object-fit: contain;
-    border: 2px solid #f0f0f0;
+    border: 2px solid var(--border-color);
     border-radius: 8px;
     padding: 3px;
-    background: white;
-    transition: transform 0.2s;
+    background: var(--primary-color);
+    transition: transform 0.3s ease;
 }
 
 .die-icon:hover {
-    transform: scale(1.05);
+    transform: rotate(15deg) scale(1.1);
+    filter: drop-shadow(0 0 8px rgba(100, 255, 218, 0.3));
 }
 
 .remove-btn {
@@ -146,7 +167,7 @@ button:hover {
     right: -8px;
     width: 20px;
     height: 20px;
-    background: #ff4444;
+    background: #FF4D4D;
     color: white;
     border: none;
     border-radius: 50%;
@@ -155,23 +176,7 @@ button:hover {
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-}
-
-@media (max-width: 768px) {
-    body {
-        grid-template-columns: 1fr;
-        padding: 15px;
-    }
-    
-    .sidebar, .main-content {
-        padding: 0;
-        border: none;
-    }
-    
-    .section {
-        margin: 15px 0;
-    }
+    box-shadow: 0 2px 6px rgba(255, 77, 77, 0.3);
 }
 
 .scoring-rules {
@@ -181,8 +186,10 @@ button:hover {
 .scoring-rule {
     margin: 10px 0;
     padding: 8px;
-    background: #fff8e1;
+    background: #112240;
     border-radius: 6px;
+    border-left: 3px solid var(--accent-color);
+    color: var(--text-secondary);
 }
 
 .die-icon-small {
@@ -191,9 +198,10 @@ button:hover {
     margin-right: 10px;
     vertical-align: middle;
     object-fit: contain;
-    border: 1px solid #e0e0e0;
+    border: 1px solid var(--border-color);
     border-radius: 5px;
     padding: 2px;
+    background: var(--primary-color);
 }
 
 .die-title {
@@ -201,7 +209,7 @@ button:hover {
     align-items: center;
     margin-bottom: 8px;
     font-weight: 500;
-    color: #333;
+    color: var(--text-primary);
 }
 
 .result-dice {
@@ -222,10 +230,11 @@ button:hover {
 
 .die-label {
     font-size: 0.75em;
-    color: #666;
+    color: var(--text-secondary);
     text-align: center;
     max-width: 80px;
     word-break: break-word;
+    text-transform: uppercase;
 }
 
 .result-header {
@@ -238,11 +247,51 @@ button:hover {
 .result-rank {
     font-size: 1.2em;
     font-weight: bold;
-    color: #2c3e50;
+    color: var(--accent-color);
 }
 
 .result-score {
     font-size: 1.1em;
-    color: #27ae60;
+    color: #52D1A4;
+    font-weight: 600;
+}
+
+h1, h2, h3 {
+    color: var(--text-primary);
     font-weight: 500;
+}
+
+h1 {
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 0.5em;
+}
+
+@media (max-width: 768px) {
+    body {
+        grid-template-columns: 1fr;
+        padding: 15px;
+    }
+    
+    .sidebar, .main-content {
+        padding: 0;
+        border: none;
+    }
+    
+    .section {
+        margin: 15px 0;
+        padding: 12px;
+    }
+    
+    button {
+        width: 100%;
+        margin: 5px 0;
+    }
+    
+    #fillDice {
+        margin-left: 0;
+    }
+}
+
+button:active {
+    transform: translateY(1px);
 }
