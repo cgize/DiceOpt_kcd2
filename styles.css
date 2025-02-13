@@ -16,8 +16,8 @@ body {
     gap: 20px;
     max-width: 1200px;
     margin: 0 auto;
-    background: var(--primary-dark);
-    color: var(--text-primary);
+    background: var(--primary-dark) !important;
+    color: var(--text-primary) !important;
 }
 
 .sidebar { 
@@ -113,7 +113,7 @@ body {
 }
 
 button {
-    padding: 10px 20px;
+    padding: 12px 24px;
     background: var(--accent-color);
     color: var(--primary-dark);
     border: none;
@@ -123,6 +123,7 @@ button {
     transition: all 0.3s ease;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    font-size: 0.95rem;
 }
 
 button:hover {
@@ -165,14 +166,14 @@ button:hover {
     position: absolute;
     top: -8px;
     right: -8px;
-    width: 20px;
-    height: 20px;
+    width: 25px;
+    height: 25px;
     background: #FF4D4D;
     color: white;
     border: none;
     border-radius: 50%;
     cursor: pointer;
-    font-size: 12px;
+    font-size: 14px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -185,16 +186,17 @@ button:hover {
 
 .scoring-rule {
     margin: 10px 0;
-    padding: 8px;
+    padding: 12px;
     background: #112240;
     border-radius: 6px;
     border-left: 3px solid var(--accent-color);
     color: var(--text-secondary);
+    font-size: 0.95rem;
 }
 
 .die-icon-small {
-    width: 35px;
-    height: 35px;
+    width: 45px;
+    height: 45px;
     margin-right: 10px;
     vertical-align: middle;
     object-fit: contain;
@@ -210,6 +212,7 @@ button:hover {
     margin-bottom: 8px;
     font-weight: 500;
     color: var(--text-primary);
+    font-size: 1rem;
 }
 
 .result-dice {
@@ -229,7 +232,7 @@ button:hover {
 }
 
 .die-label {
-    font-size: 0.75em;
+    font-size: 0.8rem;
     color: var(--text-secondary);
     text-align: center;
     max-width: 80px;
@@ -245,13 +248,13 @@ button:hover {
 }
 
 .result-rank {
-    font-size: 1.2em;
+    font-size: 1.4rem;
     font-weight: bold;
     color: var(--accent-color);
 }
 
 .result-score {
-    font-size: 1.1em;
+    font-size: 1.3rem;
     color: #52D1A4;
     font-weight: 600;
 }
@@ -264,12 +267,24 @@ h1, h2, h3 {
 h1 {
     border-bottom: 2px solid var(--border-color);
     padding-bottom: 0.5em;
+    font-size: 2rem;
+}
+
+h2 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+}
+
+h3 {
+    font-size: 1.3rem;
+    margin: 15px 0;
 }
 
 @media (max-width: 768px) {
     body {
         grid-template-columns: 1fr;
         padding: 15px;
+        gap: 15px;
     }
     
     .sidebar, .main-content {
@@ -279,16 +294,74 @@ h1 {
     
     .section {
         margin: 15px 0;
-        padding: 12px;
+        padding: 15px;
     }
     
     button {
         width: 100%;
-        margin: 5px 0;
+        margin: 8px 0;
+        padding: 15px;
+        font-size: 1.1rem;
     }
     
     #fillDice {
         margin-left: 0;
+    }
+    
+    .die-icon {
+        width: 70px;
+        height: 70px;
+    }
+    
+    .die-icon-small {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .die-table th, 
+    .die-table td {
+        padding: 10px;
+        font-size: 0.9rem;
+    }
+    
+    .result-score {
+        font-size: 1.4rem;
+    }
+    
+    .die-label {
+        font-size: 0.9rem;
+    }
+    
+    .remove-btn {
+        width: 28px;
+        height: 28px;
+        font-size: 16px;
+        top: -10px;
+        right: -10px;
+    }
+    
+    .progress-bar {
+        height: 35px;
+        border-radius: 18px;
+    }
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 1.8rem;
+    }
+    
+    h2 {
+        font-size: 1.4rem;
+    }
+    
+    .scoring-rule {
+        font-size: 1rem;
+        padding: 15px;
+    }
+    
+    .die-title {
+        font-size: 1.1rem;
     }
 }
 
