@@ -11,22 +11,22 @@
         <h1 data-i18n="title">KCD2 Dice Optimizer</h1>
         
         <div class="section">
-            <h2 data-i18n="selected_dice">Dados Seleccionados</h2>
+            <h2 data-i18n="selected_dice">Selected Dice</h2>
             <div id="dicePool"></div>
-            <div class="remove-hint" data-i18n="remove_hint">Click en × para eliminar dados</div>
+            <div class="remove-hint" data-i18n="remove_hint">Click × to remove dice</div>
         </div>
     </div>
 
     <div class="main-content">
         <div class="section">
-            <h2 data-i18n="simulation">Simulación</h2>
+            <h2 data-i18n="simulation">Simulation</h2>
             <select id="dieSelect"></select>
-            <button onclick="addDie()" data-i18n="add_die">Añadir Dado</button>
-            <button onclick="clearDice()" data-i18n="clear">Limpiar</button>
+            <button onclick="addDie()" data-i18n="add_die">Add Die</button>
+            <button onclick="clearDice()" data-i18n="clear">Clear</button>
             <button id="fillDice" onclick="fillWithNormalDice()">
-                <span data-i18n="fill_normal">Completar con Normal Die (+</span><span id="fillCount">0</span>)
+                <span data-i18n="fill_normal">Fill with Normal Die (+</span><span id="fillCount">0</span>)
             </button>
-            <button onclick="startSimulation()" data-i18n="calculate">Calcular Combinaciones</button>
+            <button onclick="startSimulation()" data-i18n="calculate">Calculate Combinations</button>
             
             <div class="progress-bar">
                 <div class="progress-fill" id="progress" style="width: 0%"></div>
@@ -36,31 +36,31 @@
         <div id="results"></div>
 
         <div class="usage-instructions">
-            <h3 data-i18n="instructions">Instrucciones de Uso</h3>
-            <!-- Los pasos se generarán dinámicamente -->
+            <h3 data-i18n="instructions">Usage Instructions</h3>
+            <!-- Dynamic steps will be injected here -->
         </div>
 
         <div class="scoring-rules">
-            <h3 data-i18n="how_we_choose">¿Cómo elegimos las mejores combinaciones?</h3>
-            <!-- Los pasos se generarán dinámicamente -->
+            <h3 data-i18n="how_we_choose">How do we choose the best combinations?</h3>
+            <!-- Dynamic steps will be injected here -->
         </div>
     </div>
 
     <script src="diceData.js"></script>
     <script>
-        // Detección de idioma
+        // Language detection
         const userLang = navigator.language || navigator.userLanguage;
         const langCode = userLang.split('-')[0];
         const lang = langCode === 'es' ? 'es' : 'en';
         
-        // Cargar traducciones
+        // Load translations
         document.write(`<script src="lang-${lang}.js"><\/script>`);
     </script>
     <script src="simulator.js"></script>
     <script>
-        // Función de traducción
+        // Translation function
         function applyTranslations() {
-            // Textos simples
+            // Simple texts
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
                 if (translations[key]) {
@@ -68,7 +68,7 @@
                 }
             });
 
-            // Listas dinámicas
+            // Dynamic lists
             const instructionContainer = document.querySelector('.usage-instructions');
             instructionContainer.innerHTML = `
                 <h3 data-i18n="instructions">${translations.instructions}</h3>
@@ -86,7 +86,7 @@
             `;
         }
 
-        // Aplicar traducciones al cargar
+        // Apply translations on load
         window.addEventListener('DOMContentLoaded', applyTranslations);
     </script>
 </body>
