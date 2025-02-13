@@ -132,8 +132,21 @@ function displayResults(results) {
         <h3>Top 5 Combinaciones</h3>
         ${results.slice(0, 5).map((r, i) => `
             <div class="result-item">
-                <strong>#${i+1}</strong>: ${r.combination.join(', ').replace(/'(s)/g, '')}
-                <br><em>Puntuación promedio:</em> ${r.score.toFixed(1)} puntos
+                <div style="margin-bottom: 10px; color: #4CAF50; font-weight: bold">
+                    #${i+1} - ${r.score.toFixed(1)} puntos
+                </div>
+                <div class="result-dice">
+                    ${r.combination.map(die => `
+                        <div style="text-align: center">
+                            <img src="${diceImages[die]}" class="die-icon" 
+                                 title="${die.replace("'s", "")}" 
+                                 alt="${die}">
+                            <div style="font-size: 0.7em; margin-top: 3px">
+                                ${die.split(' ')[0]}
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
             </div>
         `).join('')}
     `;
