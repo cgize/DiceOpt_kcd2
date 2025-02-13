@@ -19,8 +19,21 @@
         .dice-pool { display: flex; flex-wrap: wrap; gap: 10px; margin: 10px 0; }
         button { padding: 8px 15px; background: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer; }
         button:hover { background: #45a049; }
-        .progress-bar { width: 100%; height: 20px; background: #eee; border-radius: 10px; overflow: hidden; }
-        .progress-fill { height: 100%; background: #4CAF50; transition: width 0.3s ease; }
+        .progress-bar {
+            width: 100%;
+            height: 30px;  /* Aumentado de 20px */
+            background: #eee;
+            border-radius: 15px;  /* Aumentado para mantener proporción */
+            overflow: hidden;
+            margin: 15px 0;  /* Más espacio vertical */
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);  /* Sombra interior */
+        }
+        .progress-fill {
+            height: 100%;
+            background: #4CAF50;
+            transition: width 0.3s ease;
+            box-shadow: inset 0 -3px 6px rgba(0,0,0,0.1);  /* Efecto de profundidad */
+        }
         #results { margin-top: 20px; }
         .result-item { margin: 10px 0; padding: 10px; background: #f8f8f8; border-radius: 5px; }
         .scoring-rules { margin-top: 40px; padding: 20px; background: #f0f0f0; border-radius: 5px; }
@@ -80,14 +93,14 @@
 
         <div class="scoring-rules">
             <h3>Sistema de Puntuación</h3>
-            <div class="scoring-rule">1 individual = 100 puntos</div>
-            <div class="scoring-rule">5 individual = 50 puntos</div>
-            <div class="scoring-rule">Tres 1s = 1,000 puntos</div>
-            <div class="scoring-rule">Tres de cualquier número = número × 100</div>
-            <div class="scoring-rule">Cada dado adicional en triples = dobla el valor</div>
-            <div class="scoring-rule">Escalera parcial (1-5) = 500 puntos</div>
-            <div class="scoring-rule">Escalera parcial (2-6) = 750 puntos</div>
-            <div class="scoring-rule">Escalera completa (1-6) = 1,500 puntos</div>
+            <div class="scoring-rule">🔸1 individual = 100 puntos</div>
+            <div class="scoring-rule">🔸5 individual = 50 puntos</div>
+            <div class="scoring-rule">🔸Tres 1s = 1,000 puntos</div>
+            <div class="scoring-rule">🔸Tres de cualquier número = número × 100</div>
+            <div class="scoring-rule">🔸Cada dado adicional en triples = dobla el valor</div>
+            <div class="scoring-rule">🔸Escalera parcial (1-5) = 500 puntos</div>
+            <div class="scoring-rule">🔸Escalera parcial (2-6) = 750 puntos</div>
+            <div class="scoring-rule">🔸Escalera completa (1-6) = 1,500 puntos</div>
         </div>
     </div>
 
