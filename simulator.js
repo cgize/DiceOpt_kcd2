@@ -139,7 +139,7 @@ function displayResults(results) {
                 <div class="result-dice">
                     ${r.combination.map(die => `
                         <div class="die-container">
-                            <img src="src/${diceImages[die]}" 
+                            <img src="${diceImages[die]}" 
                                  class="die-icon" 
                                  alt="${die.replace("'s", "")}" 
                                  title="${die}">

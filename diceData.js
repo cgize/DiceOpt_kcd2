@@ -1,3 +1,4 @@
+// diceData.js
 const diceDB = {
     "Aranka's die": [28.6,4.8,28.6,4.8,28.6,4.8],
     "Cautious cheater's die": [23.8,14.3,9.5,14.3,23.8,14.3],
@@ -38,44 +39,45 @@ const diceDB = {
 };
 
 const diceImages = {
-    "Aranka's die": "src/die_f_icon.png",
-    "Cautious cheater's die": "src/die_b_icon.png",
-    "Ci die": "src/die_r_icon.png",
-    "Devil's head die": "src/die_r_devil_icon.png",
-    "Die of misfortune": "src/die_c_icon.png",
-    "Even die": "src/die_i_icon.png",
-    "Favourable die": "src/die_j_icon.png",
-    "Fer die": "src/die_r_icon.png",
-    "Greasy die": "src/die_g_icon.png",
-    "Grimy die": "src/die_e_icon.png",
-    "Grozav's lucky die": "src/die_m_icon.png",
-    "Heavenly Kingdom die": "src/die_kcd_icon.png",
-    "Holy Trinity die": "src/die_g_icon.png",
-    "Hugo's Die": "src/die_h_icon.png",
-    "King's die": "src/die_k_icon.png",
-    "Lousy gambler's die": "src/die_d_icon.png",
-    "Lu die": "src/die_r_icon.png",
-    "Lucky Die": "src/die_o_icon.png",
-    "Mathematician's Die": "src/die_j_icon.png",
-    "Molar die": "src/die_c_icon.png",
-    "Odd die": "src/die_k_icon.png",
-    "Ordinary die": "src/die_g_icon.png",
-    "Painted die": "src/die_l_icon.png",
-    "Pie die": "src/die_p_icon.png",
-    "Premolar die": "src/die_c_icon.png",
-    "Sad Greaser's Die": "src/die_q_icon.png",
-    "Saint Antiochus' die": "src/die_q_icon.png",
-    "Shrinking die": "src/die_h_icon.png",
-    "St. Stephen's die": "src/die_g_icon.png",
-    "Strip die": "src/die_o_icon.png",
-    "Three die": "src/die_r_icon.png",
-    "Unbalanced Die": "src/die_b_icon.png",
-    "Unlucky die": "src/die_e_icon.png",
-    "Wagoner's Die": "src/die_a_icon.png",
-    "Weighted die": "src/die_f_icon.png",
-    "Normal Die": "src/die_g_icon.png"
+    "Aranka's die": "/src/die_f_icon.png",
+    "Cautious cheater's die": "/src/die_b_icon.png",
+    "Ci die": "/src/die_r_icon.png",
+    "Devil's head die": "/src/die_r_devil_icon.png",
+    "Die of misfortune": "/src/die_c_icon.png",
+    "Even die": "/src/die_i_icon.png",
+    "Favourable die": "/src/die_j_icon.png",
+    "Fer die": "/src/die_r_icon.png",
+    "Greasy die": "/src/die_g_icon.png",
+    "Grimy die": "/src/die_e_icon.png",
+    "Grozav's lucky die": "/src/die_m_icon.png",
+    "Heavenly Kingdom die": "/src/die_kcd_icon.png",
+    "Holy Trinity die": "/src/die_g_icon.png",
+    "Hugo's Die": "/src/die_h_icon.png",
+    "King's die": "/src/die_k_icon.png",
+    "Lousy gambler's die": "/src/die_d_icon.png",
+    "Lu die": "/src/die_r_icon.png",
+    "Lucky Die": "/src/die_o_icon.png",
+    "Mathematician's Die": "/src/die_j_icon.png",
+    "Molar die": "/src/die_c_icon.png",
+    "Odd die": "/src/die_k_icon.png",
+    "Ordinary die": "/src/die_g_icon.png",
+    "Painted die": "/src/die_l_icon.png",
+    "Pie die": "/src/die_p_icon.png",
+    "Premolar die": "/src/die_c_icon.png",
+    "Sad Greaser's Die": "/src/die_q_icon.png",
+    "Saint Antiochus' die": "/src/die_q_icon.png",
+    "Shrinking die": "/src/die_h_icon.png",
+    "St. Stephen's die": "/src/die_g_icon.png",
+    "Strip die": "/src/die_o_icon.png",
+    "Three die": "/src/die_r_icon.png",
+    "Unbalanced Die": "/src/die_b_icon.png",
+    "Unlucky die": "/src/die_e_icon.png",
+    "Wagoner's Die": "/src/die_a_icon.png",
+    "Weighted die": "/src/die_f_icon.png",
+    "Normal Die": "/src/die_g_icon.png"
 };
 
+// Configuración del selector
 const dieSelect = document.getElementById('dieSelect');
 Object.keys(diceDB).forEach(dieName => {
     const option = document.createElement('option');
@@ -84,6 +86,7 @@ Object.keys(diceDB).forEach(dieName => {
     dieSelect.appendChild(option);
 });
 
+// Estado y funciones
 let selectedDice = [];
 
 function addDie() {
@@ -107,18 +110,13 @@ function removeDie(index) {
 
 function updateFillButton() {
     const fillButton = document.getElementById('fillDice');
-    const fillCount = selectedDice.length < 6 ? 6 - selectedDice.length : 0;
-    
-    if (fillCount > 0) {
-        fillButton.classList.add('visible');
-        document.getElementById('fillCount').textContent = fillCount;
-    } else {
-        fillButton.classList.remove('visible');
-    }
+    const fillCount = Math.max(0, 6 - selectedDice.length);
+    fillButton.classList.toggle('visible', fillCount > 0);
+    document.getElementById('fillCount').textContent = fillCount;
 }
 
 function fillWithNormalDice() {
-    const needed = 6 - selectedDice.length;
+    const needed = Math.max(0, 6 - selectedDice.length);
     if (needed > 0) {
         selectedDice.push(...Array(needed).fill('Normal Die'));
         updateDicePool();
@@ -133,13 +131,15 @@ function updateDicePool() {
             <button class="remove-btn" onclick="removeDie(${index})">×</button>
             <div class="die-title">${die.replace("'s", "")}</div>
             <table class="die-table">
-                <tr class="die-header">
-                    ${[1,2,3,4,5,6].map(n => `<th>${n}</th>`).join('')}
-                </tr>
-                <tr>
-                    ${diceDB[die].map(p => `<td>${p.toFixed(1)}%</td>`).join('')}
-                </tr>
+                <tr class="die-header">${[1,2,3,4,5,6].map(n => `<th>${n}</th>`).join('')}</tr>
+                <tr>${diceDB[die].map(p => `<td>${p.toFixed(1)}%</td>`).join('')}</tr>
             </table>
         </div>
     `).join('');
 }
+
+// Validación de porcentajes (opcional)
+// Object.entries(diceDB).forEach(([name, probs]) => {
+//     const total = probs.reduce((a, b) => a + b, 0);
+//     if(Math.abs(total - 100) > 0.15) console.warn(`${name}: ${total.toFixed(2)}%`);
+// });
