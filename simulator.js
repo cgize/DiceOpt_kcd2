@@ -130,13 +130,13 @@ function startSimulation() {
 function displayResults(results) {
     const resultsDiv = document.getElementById('results');
     resultsDiv.innerHTML = `
-        <h3>Top 5 Combinaciones</h3>
-        ${results.map((r, i) => `
-            <div class="result-item">
-                <div class="result-header">
-                    <span class="result-rank">#${i+1}</span>
-                    <span class="result-score">${r.score.toFixed(1)} puntos</span>
-                </div>
+    <h3>${translations.top_combinations}</h3>
+    ${results.map((r, i) => `
+        <div class="result-item">
+            <div class="result-header">
+                <span class="result-rank">#${i+1}</span>
+                <span class="result-score">${r.score.toFixed(1)} ${translations.points}</span>
+            </div>
                 <div class="result-dice">
                     ${r.combination.map(die => `
                         <div class="die-container">

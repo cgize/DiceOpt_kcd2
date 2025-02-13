@@ -1,34 +1,32 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>KCD2 Dice Optimizer</title>
+    <title data-i18n="title">KCD2 Dice Optimizer</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="sidebar">
-        <h1>KCD2 Dice Optimizer</h1>
+        <h1 data-i18n="title">KCD2 Dice Optimizer</h1>
         
         <div class="section">
-            <h2>Dados Seleccionados</h2>
+            <h2 data-i18n="selected_dice">Dados Seleccionados</h2>
             <div id="dicePool"></div>
-            <div style="font-size: 0.8em; color: #666; margin-top: 10px;">
-                Click en × para eliminar dados
-            </div>
+            <div class="remove-hint" data-i18n="remove_hint">Click en × para eliminar dados</div>
         </div>
     </div>
 
     <div class="main-content">
         <div class="section">
-            <h2>Simulación</h2>
+            <h2 data-i18n="simulation">Simulación</h2>
             <select id="dieSelect"></select>
-            <button onclick="addDie()">Añadir Dado</button>
-            <button onclick="clearDice()">Limpiar</button>
+            <button onclick="addDie()" data-i18n="add_die">Añadir Dado</button>
+            <button onclick="clearDice()" data-i18n="clear">Limpiar</button>
             <button id="fillDice" onclick="fillWithNormalDice()">
-                Completar con Normal Die (+<span id="fillCount">0</span>)
+                <span data-i18n="fill_normal">Completar con Normal Die (+</span><span id="fillCount">0</span>)
             </button>
-            <button onclick="startSimulation()">Calcular Combinaciones</button>
+            <button onclick="startSimulation()" data-i18n="calculate">Calcular Combinaciones</button>
             
             <div class="progress-bar">
                 <div class="progress-fill" id="progress" style="width: 0%"></div>
@@ -37,17 +35,59 @@
 
         <div id="results"></div>
 
+        <div class="usage-instructions">
+            <h3 data-i18n="instructions">Instrucciones de Uso</h3>
+            <!-- Los pasos se generarán dinámicamente -->
+        </div>
+
         <div class="scoring-rules">
-            <h3>¿Cómo elegimos las mejores combinaciones?</h3>
-            <div class="scoring-rule">🔹 Simulamos 1,000 tiradas por combinación</div>
-            <div class="scoring-rule">🔹 Calculamos el puntaje promedio obtenido</div>
-            <div class="scoring-rule">🔹 Consideramos las probabilidades únicas de cada dado</div>
-            <div class="scoring-rule">🔹 Ordenamos por mayor consistencia en resultados altos</div>
-            <div class="scoring-rule">🔹 Priorizamos combinaciones con sinergia entre dados</div>
+            <h3 data-i18n="how_we_choose">¿Cómo elegimos las mejores combinaciones?</h3>
+            <!-- Los pasos se generarán dinámicamente -->
         </div>
     </div>
 
     <script src="diceData.js"></script>
+    <script>
+        // Detección de idioma
+        const userLang = navigator.language || navigator.userLanguage;
+        const langCode = userLang.split('-')[0];
+        const lang = langCode === 'es' ? 'es' : 'en';
+        
+        // Cargar traducciones
+        document.write(`<script src="lang-${lang}.js"><\/script>`);
+    </script>
     <script src="simulator.js"></script>
+    <script>
+        // Función de traducción
+        function applyTranslations() {
+            // Textos simples
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[key]) {
+                    el.textContent = translations[key];
+                }
+            });
+
+            // Listas dinámicas
+            const instructionContainer = document.querySelector('.usage-instructions');
+            instructionContainer.innerHTML = `
+                <h3 data-i18n="instructions">${translations.instructions}</h3>
+                ${translations.instruction_steps.map((step, i) => `
+                    <div class="instruction-step">🔸${i + 1}. ${step}</div>
+                `).join('')}
+            `;
+
+            const scoringContainer = document.querySelector('.scoring-rules');
+            scoringContainer.innerHTML = `
+                <h3 data-i18n="how_we_choose">${translations.how_we_choose}</h3>
+                ${translations.simulation_steps.map(step => `
+                    <div class="scoring-rule">🔹 ${step}</div>
+                `).join('')}
+            `;
+        }
+
+        // Aplicar traducciones al cargar
+        window.addEventListener('DOMContentLoaded', applyTranslations);
+    </script>
 </body>
 </html>
