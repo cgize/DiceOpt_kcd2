@@ -1,3 +1,4 @@
+// simulator.js
 const calculateScore = (roll) => {
     const counts = Array(6).fill(0);
     roll.forEach(n => counts[n-1]++);
@@ -122,7 +123,7 @@ function startSimulation() {
     const chunkSize = 10;
     for(let i = 0; i < combinations.length; i += chunkSize) {
         const chunk = combinations.slice(i, i + chunkSize);
-        worker.postMessage([chunk, 1000]); // 1000 simulaciones fijas por chunk
+        worker.postMessage([chunk, 1000]); // 1000 simulaciones por chunk
     }
 }
 

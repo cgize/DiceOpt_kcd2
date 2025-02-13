@@ -129,7 +129,12 @@ function updateDicePool() {
     pool.innerHTML = selectedDice.map((die, index) => `
         <div class="die-details">
             <button class="remove-btn" onclick="removeDie(${index})">×</button>
-            <div class="die-title">${die.replace("'s", "")}</div>
+            <div class="die-title">
+                <img src="${diceImages[die]}" 
+                     class="die-icon-small" 
+                     alt="${die.replace("'s", "")}">
+                ${die.replace("'s", "")}
+            </div>
             <table class="die-table">
                 <tr class="die-header">${[1,2,3,4,5,6].map(n => `<th>${n}</th>`).join('')}</tr>
                 <tr>${diceDB[die].map(p => `<td>${p.toFixed(1)}%</td>`).join('')}</tr>
