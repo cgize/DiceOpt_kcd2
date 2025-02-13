@@ -61,7 +61,16 @@ function clearDice() {
 
 function updateDicePool() {
     const pool = document.getElementById('dicePool');
-    pool.innerHTML = selectedDice.map(die => 
-        `<div class="die-tag">${die}</div>`
-    ).join('');
+    pool.innerHTML = selectedDice.map(die => `
+        <div class="die-details">
+            <strong>${die}</strong>
+            <div class="die-probabilities">
+                ${diceDB[die].map((p, i) => `
+                    <div class="probability-item">
+                        Cara ${i + 1}: ${p}%
+                    </div>
+                `).join('')}
+            </div>
+        </div>
+    `).join('');
 }

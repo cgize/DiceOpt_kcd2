@@ -1,41 +1,72 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Farkle Dice Optimizer</title>
+    <title>KCD2 Dice Optimizer</title>
     <meta charset="UTF-8">
     <style>
-        body { font-family: Arial, sans-serif; padding: 20px; max-width: 800px; margin: 0 auto; }
+        body { 
+            font-family: Arial, sans-serif; 
+            padding: 20px; 
+            display: grid;
+            grid-template-columns: 30% 70%;
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .sidebar { padding-right: 20px; border-right: 2px solid #ddd; }
+        .main-content { padding-left: 20px; }
         .section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
         .dice-pool { display: flex; flex-wrap: wrap; gap: 10px; margin: 10px 0; }
-        .die-tag { background: #e0e0e0; padding: 5px 10px; border-radius: 15px; }
+        .die-details { margin: 10px 0; padding: 10px; background: #f8f8f8; border-radius: 5px; }
+        .die-probabilities { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; }
+        .probability-item { font-size: 0.9em; }
         button { padding: 8px 15px; background: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer; }
         button:hover { background: #45a049; }
         .progress-bar { width: 100%; height: 20px; background: #eee; border-radius: 10px; overflow: hidden; }
         .progress-fill { height: 100%; background: #4CAF50; transition: width 0.3s ease; }
         #results { margin-top: 20px; }
         .result-item { margin: 10px 0; padding: 10px; background: #f8f8f8; border-radius: 5px; }
+        .scoring-rules { margin-top: 40px; padding: 20px; background: #f0f0f0; border-radius: 5px; }
+        .scoring-rule { margin: 5px 0; }
     </style>
 </head>
 <body>
-    <h1>Farkle Dice Optimizer</h1>
-    
-    <div class="section">
-        <h2>Seleccionar Dados</h2>
-        <select id="dieSelect"></select>
-        <button onclick="addDie()">Añadir Dado</button>
-        <button onclick="clearDice()">Limpiar</button>
-        <div class="dice-pool" id="dicePool"></div>
-    </div>
-
-    <div class="section">
-        <h2>Simulación</h2>
-        <button onclick="startSimulation()">Calcular Mejor Combinación</button>
-        <div class="progress-bar">
-            <div class="progress-fill" id="progress" style="width: 0%"></div>
+    <div class="sidebar">
+        <h1>Farkle Optimizer</h1>
+        
+        <div class="section">
+            <h2>Dados Seleccionados</h2>
+            <div id="dicePool"></div>
         </div>
     </div>
 
-    <div id="results"></div>
+    <div class="main-content">
+        <div class="section">
+            <h2>Simulación</h2>
+            <select id="dieSelect"></select>
+            <button onclick="addDie()">Añadir Dado</button>
+            <button onclick="clearDice()">Limpiar</button>
+            <button onclick="startSimulation()">Calcular Combinaciones</button>
+            
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <div id="results"></div>
+
+        <div class="scoring-rules">
+            <h3>Sistema de Puntuación</h3>
+            <div class="scoring-rule">🎲 1 individual = 100 puntos</div>
+            <div class="scoring-rule">🎲 5 individual = 50 puntos</div>
+            <div class="scoring-rule">🎲 Tres 1s = 1,000 puntos</div>
+            <div class="scoring-rule">🎲 Tres de cualquier número = número × 100 (ej: tres 4s = 400)</div>
+            <div class="scoring-rule">🎲 Cada dado adicional en triples = dobla el valor (4=2×, 5=4×, 6=8×)</div>
+            <div class="scoring-rule">📈 Escalera parcial (1-5) = 500 puntos</div>
+            <div class="scoring-rule">📈 Escalera parcial (2-6) = 750 puntos</div>
+            <div class="scoring-rule">📊 Escalera completa (1-6) = 1,500 puntos</div>
+        </div>
+    </div>
 
     <script src="diceData.js"></script>
     <script src="simulator.js"></script>

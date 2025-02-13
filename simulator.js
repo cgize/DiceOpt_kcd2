@@ -85,7 +85,7 @@ function startSimulation() {
         
         if(processed >= total) {
             const sortedResults = finalResults.sort((a, b) => b.score - a.score);
-            displayResults(sortedResults.slice(0, 20));
+            displayResults(sortedResults.slice(0, 5));
         }
     };
 
