@@ -38,25 +38,42 @@ const diceDB = {
 };
 
 const diceImages = {
-    "Aranka's die": "https://kingdomcomedeliverance2.wiki.fextralife.com/file/Kingdom-Come-Deliverance-2/arankas_die.png",
-    "Cautious cheater's die": "https://kingdomcomedeliverance2.wiki.fextralife.com/file/Kingdom-Come-Deliverance-2/cautious_cheaters_die.png",
-    "Ci die": "https://kingdomcomedeliverance2.wiki.fextralife.com/file/Kingdom-Come-Deliverance-2/ci_die.png",
-    "Devil's head die": "https://kingdomcomedeliverance2.wiki.fextralife.com/file/Kingdom-Come-Deliverance-2/devils_head_die.png",
-    "Die of misfortune": "https://kingdomcomedeliverance2.wiki.fextralife.com/file/Kingdom-Come-Deliverance-2/die_of_misfortune.png",
-    "Even die": "https://kingdomcomedeliverance2.wiki.fextralife.com/file/Kingdom-Come-Deliverance-2/even_die.png",
-    "Favourable die": "https://kingdomcomedeliverance2.wiki.fextralife.com/file/Kingdom-Come-Deliverance-2/favourable_die.png",
-    "Fer die": "https://kingdomcomedeliverance2.wiki.fextralife.com/file/Kingdom-Come-Deliverance-2/fer_die.png",
-    "Greasy die": "https://kingdomcomedeliverance2.wiki.fextralife.com/file/Kingdom-Come-Deliverance-2/greasy_die.png",
-    "Grimy die": "https://kingdomcomedeliverance2.wiki.fextralife.com/file/Kingdom-Come-Deliverance-2/grimy_die.png",
-    "Grozav's lucky die": "https://kingdomcomedeliverance2.wiki.fextralife.com/file/Kingdom-Come-Deliverance-2/grozavs_lucky_die.png",
-    "Holy Trinity die": "https://kingdomcomedeliverance2.wiki.fextralife.com/file/Kingdom-Come-Deliverance-2/holy_trinity_die.png",
-    "Hugo's Die": "https://kingdomcomedeliverance2.wiki.fextralife.com/file/Kingdom-Come-Deliverance-2/hugos_die.png",
-    "King's die": "https://kingdomcomedeliverance2.wiki.fextralife.com/file/Kingdom-Come-Deliverance-2/kings_die.png",
-    "Lousy gambler's die": "https://kingdomcomedeliverance2.wiki.fextralife.com/file/Kingdom-Come-Deliverance-2/lousy_gamblers_die.png",
-    "Lu die": "https://kingdomcomedeliverance2.wiki.fextralife.com/file/Kingdom-Come-Deliverance-2/lu_die.png",
-    "Lucky Die": "https://kingdomcomedeliverance2.wiki.fextralife.com/file/Kingdom-Come-Deliverance-2/lucky_die.png",
-    "Mathematician's Die": "https://kingdomcomedeliverance2.wiki.fextralife.com/file/Kingdom-Come-Deliverance-2/mathematicians_die.png",
-    "Molar die": "https://kingdomcomedeliverance2.wiki.fextralife.com/file/Kingdom-Come-Deliverance-2/molar_die.png"
+    "Aranka's die": "src/die_f_icon.png",
+    "Cautious cheater's die": "src/die_b_icon.png",
+    "Ci die": "src/die_r_icon.png",
+    "Devil's head die": "src/die_r_devil_icon.png",
+    "Die of misfortune": "src/die_c_icon.png",
+    "Even die": "src/die_i_icon.png",
+    "Favourable die": "src/die_j_icon.png",
+    "Fer die": "src/die_r_icon.png",
+    "Greasy die": "src/die_g_icon.png",
+    "Grimy die": "src/die_e_icon.png",
+    "Grozav's lucky die": "src/die_m_icon.png",
+    "Heavenly Kingdom die": "src/die_kcd_icon.png",
+    "Holy Trinity die": "src/die_g_icon.png",
+    "Hugo's Die": "src/die_h_icon.png",
+    "King's die": "src/die_k_icon.png",
+    "Lousy gambler's die": "src/die_d_icon.png",
+    "Lu die": "src/die_r_icon.png",
+    "Lucky Die": "src/die_o_icon.png",
+    "Mathematician's Die": "src/die_j_icon.png",
+    "Molar die": "src/die_c_icon.png",
+    "Odd die": "src/die_k_icon.png",
+    "Ordinary die": "src/die_g_icon.png",
+    "Painted die": "src/die_l_icon.png",
+    "Pie die": "src/die_p_icon.png",
+    "Premolar die": "src/die_c_icon.png",
+    "Sad Greaser's Die": "src/die_q_icon.png",
+    "Saint Antiochus' die": "src/die_q_icon.png",
+    "Shrinking die": "src/die_h_icon.png",
+    "St. Stephen's die": "src/die_g_icon.png",
+    "Strip die": "src/die_o_icon.png",
+    "Three die": "src/die_r_icon.png",
+    "Unbalanced Die": "src/die_b_icon.png",
+    "Unlucky die": "src/die_e_icon.png",
+    "Wagoner's Die": "src/die_a_icon.png",
+    "Weighted die": "src/die_f_icon.png",
+    "Normal Die": "src/die_g_icon.png"
 };
 
 const dieSelect = document.getElementById('dieSelect');
@@ -73,16 +90,40 @@ function addDie() {
     const dieName = dieSelect.value;
     selectedDice.push(dieName);
     updateDicePool();
+    updateFillButton();
 }
 
 function clearDice() {
     selectedDice = [];
     updateDicePool();
+    updateFillButton();
 }
 
 function removeDie(index) {
     selectedDice.splice(index, 1);
     updateDicePool();
+    updateFillButton();
+}
+
+function updateFillButton() {
+    const fillButton = document.getElementById('fillDice');
+    const fillCount = selectedDice.length < 6 ? 6 - selectedDice.length : 0;
+    
+    if (fillCount > 0) {
+        fillButton.classList.add('visible');
+        document.getElementById('fillCount').textContent = fillCount;
+    } else {
+        fillButton.classList.remove('visible');
+    }
+}
+
+function fillWithNormalDice() {
+    const needed = 6 - selectedDice.length;
+    if (needed > 0) {
+        selectedDice.push(...Array(needed).fill('Normal Die'));
+        updateDicePool();
+        updateFillButton();
+    }
 }
 
 function updateDicePool() {

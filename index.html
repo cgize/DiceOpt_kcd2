@@ -5,86 +5,147 @@
     <meta charset="UTF-8">
     <style>
         body { 
-            font-family: Arial, sans-serif; 
+            font-family: 'Arial', sans-serif; 
             padding: 20px; 
             display: grid;
             grid-template-columns: 35% 65%;
             gap: 20px;
             max-width: 1200px;
             margin: 0 auto;
+            background: #fafafa;
         }
-        .sidebar { padding-right: 20px; border-right: 2px solid #ddd; }
-        .main-content { padding-left: 20px; }
-        .section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
-        .dice-pool { display: flex; flex-wrap: wrap; gap: 10px; margin: 10px 0; }
-        button { padding: 8px 15px; background: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer; }
-        button:hover { background: #45a049; }
+
+        .sidebar { 
+            padding-right: 20px; 
+            border-right: 2px solid #e0e0e0;
+            position: sticky;
+            top: 20px;
+            height: fit-content;
+        }
+
+        .main-content { 
+            padding-left: 20px; 
+            min-width: 0;
+        }
+
+        .section { 
+            margin: 20px 0; 
+            padding: 15px; 
+            border: 1px solid #e0e0e0; 
+            border-radius: 8px;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
         .progress-bar {
             width: 100%;
             height: 30px;
-            background: #eee;
+            background: #f0f0f0;
             border-radius: 15px;
             overflow: hidden;
             margin: 15px 0;
-            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.08);
         }
+
         .progress-fill {
             height: 100%;
-            background: #4CAF50;
-            transition: width 0.3s ease;
-            box-shadow: inset 0 -3px 6px rgba(0,0,0,0.1);
+            background: linear-gradient(to right, #4CAF50, #45a049);
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        #results { margin-top: 20px; }
-        .result-item { margin: 10px 0; padding: 10px; background: #f8f8f8; border-radius: 5px; }
-        .scoring-rules { margin-top: 40px; padding: 20px; background: #f0f0f0; border-radius: 5px; }
-        .scoring-rule { margin: 5px 0; font-size: 0.9em; }
+
+        #results { 
+            margin-top: 20px;
+        }
+
+        .result-item {
+            margin: 15px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+            transition: transform 0.2s;
+        }
+
+        .result-item:hover {
+            transform: translateY(-2px);
+        }
+
+        .die-details {
+            position: relative;
+            padding: 12px;
+            margin: 8px 0;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+        }
+
         .die-table {
-            margin: 2px 0;
+            margin: 5px 0;
             border-spacing: 0;
             width: 100%;
+            table-layout: fixed;
         }
+
         .die-table th, .die-table td {
-            padding: 2px;
-            min-width: 40px;
-            font-size: 0.8em;
-            border-right: 1px solid #eee;
+            padding: 6px;
+            font-size: 0.75em;
+            border-right: 1px solid #f0f0f0;
             text-align: center;
-        }
-        .die-table th:last-child, .die-table td:last-child {
-            border-right: none;
-        }
-        .die-header {
-            background: #f8f8f8;
-            font-weight: bold;
-        }
-        .die-title {
-            font-size: 0.9em;
-            margin: 5px 0;
-            color: #333;
-        }
-        .result-dice {
-            display: flex;
-            gap: 10px;
-            margin: 10px 0;
-            flex-wrap: wrap;
-        }
-        .die-icon {
-            width: 50px;
-            height: 50px;
-            object-fit: contain;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            padding: 2px;
             background: white;
         }
-        .result-item {
-            padding: 15px;
-            margin: 15px 0;
-            background: #fff;
-            border: 1px solid #eee;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+
+        .die-table th {
+            background: #f8f8f8;
+            font-weight: 600;
+            color: #555;
         }
+
+        button {
+            padding: 10px 20px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+            margin: 5px;
+        }
+
+        button:hover {
+            background: #45a049;
+            box-shadow: 0 2px 8px rgba(76,175,80,0.3);
+        }
+
+        #fillDice {
+            background: #2196F3;
+            margin-left: 10px;
+            display: none;
+        }
+
+        #fillDice:hover {
+            background: #1976D2;
+        }
+
+        #fillDice.visible {
+            display: inline-block;
+        }
+
+        .die-icon {
+            width: 55px;
+            height: 55px;
+            object-fit: contain;
+            border: 2px solid #f0f0f0;
+            border-radius: 8px;
+            padding: 3px;
+            background: white;
+            transition: transform 0.2s;
+        }
+
+        .die-icon:hover {
+            transform: scale(1.05);
+        }
+
         .remove-btn {
             position: absolute;
             top: -8px;
@@ -102,13 +163,21 @@
             justify-content: center;
             box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
-        .die-details {
-            position: relative;
-            padding: 8px;
-            margin: 5px;
-            background: #fff;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+
+        @media (max-width: 768px) {
+            body {
+                grid-template-columns: 1fr;
+                padding: 15px;
+            }
+            
+            .sidebar, .main-content {
+                padding: 0;
+                border: none;
+            }
+            
+            .section {
+                margin: 15px 0;
+            }
         }
     </style>
 </head>
@@ -131,6 +200,9 @@
             <select id="dieSelect"></select>
             <button onclick="addDie()">Añadir Dado</button>
             <button onclick="clearDice()">Limpiar</button>
+            <button id="fillDice" onclick="fillWithNormalDice()">
+                Completar con Normal Die (+<span id="fillCount">0</span>)
+            </button>
             <button onclick="startSimulation()">Calcular Combinaciones</button>
             
             <div class="progress-bar">

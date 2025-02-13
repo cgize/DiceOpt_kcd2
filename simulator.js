@@ -132,18 +132,18 @@ function displayResults(results) {
         <h3>Top 5 Combinaciones</h3>
         ${results.map((r, i) => `
             <div class="result-item">
-                <div style="margin-bottom: 10px; color: #4CAF50; font-weight: bold">
-                    #${i+1} - ${r.score.toFixed(1)} puntos
+                <div class="result-header">
+                    <span class="result-rank">#${i+1}</span>
+                    <span class="result-score">${r.score.toFixed(1)} puntos</span>
                 </div>
                 <div class="result-dice">
                     ${r.combination.map(die => `
-                        <div style="text-align: center">
-                            <img src="${diceImages[die]}" class="die-icon" 
-                                 title="${die.replace("'s", "")}" 
-                                 alt="${die}">
-                            <div style="font-size: 0.7em; margin-top: 3px">
-                                ${die.split(' ')[0]}
-                            </div>
+                        <div class="die-container">
+                            <img src="src/${diceImages[die]}" 
+                                 class="die-icon" 
+                                 alt="${die.replace("'s", "")}" 
+                                 title="${die}">
+                            <div class="die-label">${die.split(' ')[0]}</div>
                         </div>
                     `).join('')}
                 </div>
