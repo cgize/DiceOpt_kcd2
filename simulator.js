@@ -129,10 +129,10 @@ function getUniqueCombinations(dice, maxSize) {
 function displayResults(results) {
     const resultsDiv = document.getElementById('results');
     resultsDiv.innerHTML = `
-        <h3>Top ${results.length} Combinaciones</h3>
-        ${results.map((r, i) => `
+        <h3>Top 5 Combinaciones</h3>
+        ${results.slice(0, 5).map((r, i) => `
             <div class="result-item">
-                <strong>#${i+1}</strong>: ${r.combination.join(', ')}
+                <strong>#${i+1}</strong>: ${r.combination.join(', ').replace(/'(s)/g, '')}
                 <br><em>Puntuación promedio:</em> ${r.score.toFixed(1)} puntos
             </div>
         `).join('')}
