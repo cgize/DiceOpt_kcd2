@@ -59,7 +59,6 @@ const diceImages = {
     "Molar die": "https://kingdomcomedeliverance2.wiki.fextralife.com/file/Kingdom-Come-Deliverance-2/molar_die.png"
 };
 
-// Initialize die selector
 const dieSelect = document.getElementById('dieSelect');
 Object.keys(diceDB).forEach(dieName => {
     const option = document.createElement('option');
@@ -81,10 +80,16 @@ function clearDice() {
     updateDicePool();
 }
 
+function removeDie(index) {
+    selectedDice.splice(index, 1);
+    updateDicePool();
+}
+
 function updateDicePool() {
     const pool = document.getElementById('dicePool');
-    pool.innerHTML = selectedDice.map(die => `
+    pool.innerHTML = selectedDice.map((die, index) => `
         <div class="die-details">
+            <button class="remove-btn" onclick="removeDie(${index})">×</button>
             <div class="die-title">${die.replace("'s", "")}</div>
             <table class="die-table">
                 <tr class="die-header">

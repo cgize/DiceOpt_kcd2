@@ -1,35 +1,63 @@
 const calculateScore = (roll) => {
-    const counts = [0,0,0,0,0,0];
+    const counts = Array(6).fill(0);
     roll.forEach(n => counts[n-1]++);
-    
+
     let score = 0;
-    
+    const baseScores = [1000, 200, 300, 400, 500, 600];
+
     // Singles
-    score += counts[0] * 100;
+    score += counts[0] * 100; 
     score += counts[4] * 50;
-    
-    // Triples y superiores
-    for(let i = 0; i < 6; i++) {
-        if(counts[i] >= 3) {
-            const multiplier = Math.pow(2, counts[i] - 3);
-            score += (i === 0 ? 1000 : (i+1)*100) * multiplier;
+
+    // Triples y múltiplos
+    counts.forEach((count, i) => {
+        if (count >= 3) {
+            score += baseScores[i] * (2 ** (count - 3));
         }
-    }
-    
-    // Straights
-    if([1,2,3,4,5].every(n => counts[n-1] >= 1)) score += 500;
-    if([2,3,4,5,6].every(n => counts[n-1] >= 1)) score += 750;
-    if(counts.every(c => c >= 1)) score += 1500;
-    
+    });
+
+    // Escaleras
+    if ([1,2,3,4,5].every(n => counts[n-1] >= 1)) score += 500;
+    if ([2,3,4,5,6].every(n => counts[n-1] >= 1)) score += 750;
+    if (counts.every(c => c >= 1)) score += 1500;
+
     return score;
 };
 
-// Configurar Web Worker
+function getUniqueCombinations(dice, maxSize) {
+    const counts = {};
+    dice.forEach(die => counts[die] = (counts[die] || 0) + 1);
+    
+    const combinations = [];
+    const dieTypes = Object.keys(counts);
+    
+    function generate(index, currentCombo, currentCount) {
+        if(currentCount > maxSize) return;
+        if(currentCount > 0) combinations.push([...currentCombo]);
+        
+        if(index >= dieTypes.length) return;
+        
+        const die = dieTypes[index];
+        const max = Math.min(counts[die], maxSize - currentCount);
+        
+        for(let i = 0; i <= max; i++) {
+            generate(
+                index + 1,
+                i > 0 ? [...currentCombo, ...Array(i).fill(die)] : currentCombo,
+                currentCount + i
+            );
+        }
+    }
+    
+    generate(0, [], 0);
+    return combinations.filter(c => c.length <= maxSize && c.length > 0);
+}
+
 const workerCode = `
 const calculateScore = ${calculateScore.toString()};
 const diceDB = ${JSON.stringify(diceDB)};
 
-self.onmessage = async (e) => {
+self.onmessage = (e) => {
     const [combinations, simulations] = e.data;
     const results = [];
     
@@ -39,7 +67,7 @@ self.onmessage = async (e) => {
         
         for(let i = 0; i < simulations; i++) {
             const roll = dice.map(die => {
-                const rand = Math.random() * 100;
+                let rand = Math.random() * 100;
                 let accum = 0;
                 for(let f = 0; f < 6; f++) {
                     accum += die[f];
@@ -49,6 +77,7 @@ self.onmessage = async (e) => {
             });
             totalScore += calculateScore(roll);
         }
+        
         results.push({
             combination: combo,
             score: totalScore / simulations
@@ -93,44 +122,15 @@ function startSimulation() {
     const chunkSize = 10;
     for(let i = 0; i < combinations.length; i += chunkSize) {
         const chunk = combinations.slice(i, i + chunkSize);
-        worker.postMessage([chunk, 1000]);
+        worker.postMessage([chunk, 1000]); // 1000 simulaciones fijas por chunk
     }
-}
-
-function getUniqueCombinations(dice, maxSize) {
-    const counts = {};
-    dice.forEach(die => counts[die] = (counts[die] || 0) + 1);
-    
-    const combinations = [];
-    const dieTypes = Object.keys(counts);
-    
-    function generate(index, currentCombo, currentCount) {
-        if(currentCount > maxSize) return;
-        if(currentCount > 0) combinations.push([...currentCombo]);
-        
-        if(index >= dieTypes.length) return;
-        
-        const die = dieTypes[index];
-        const max = Math.min(counts[die], maxSize - currentCount);
-        
-        for(let i = 0; i <= max; i++) {
-            generate(
-                index + 1,
-                i > 0 ? [...currentCombo, ...Array(i).fill(die)] : currentCombo,
-                currentCount + i
-            );
-        }
-    }
-    
-    generate(0, [], 0);
-    return combinations.filter(c => c.length <= maxSize && c.length > 0);
 }
 
 function displayResults(results) {
     const resultsDiv = document.getElementById('results');
     resultsDiv.innerHTML = `
         <h3>Top 5 Combinaciones</h3>
-        ${results.slice(0, 5).map((r, i) => `
+        ${results.map((r, i) => `
             <div class="result-item">
                 <div style="margin-bottom: 10px; color: #4CAF50; font-weight: bold">
                     #${i+1} - ${r.score.toFixed(1)} puntos
