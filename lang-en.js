@@ -22,7 +22,7 @@ const translations = {
       "Click 'Add Die' to include them",
       "Use 'Fill with Normal Die' if you have fewer than 6 dice",
       "Remove unwanted dice with × button",
-      "When you have 6 dice, click 'Calculate Combinations'",
+      "When you have 6 dice or more, click 'Calculate Combinations'",
       "Wait for results sorted by highest score"
     ]
   };

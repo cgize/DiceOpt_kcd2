@@ -22,7 +22,7 @@ const translations = {
       "Haz clic en 'Añadir Dado' para agregarlos",
       "Usa 'Completar con Normal Die' si tienes menos de 6 dados",
       "Elimina dados no deseados con el botón ×",
-      "Cuando tengas 6 dados, haz clic en 'Calcular Combinaciones'",
+      "Cuando tengas 6 dados o más, haz clic en 'Calcular Combinaciones'",
       "Espera los resultados ordenados por mejor puntuación"
     ]
   };
