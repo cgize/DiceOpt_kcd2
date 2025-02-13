@@ -1,4 +1,11 @@
 const diceDB = {
+    // ... (los mismos datos que antes)
+};
+
+// Initialize die selector
+const dieSelect = document.getElementById('dieSelect');
+
+const diceDB = {
     "Aranka's die": [28.6,4.8,28.6,4.8,28.6,4.8],
     "Cautious cheater's die": [23.8,14.3,9.5,14.3,23.8,14.3],
     "Ci die": [13.0,13.0,13.0,13.0,13.0,34.8],
