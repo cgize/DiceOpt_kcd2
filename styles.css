@@ -368,3 +368,52 @@ h3 {
 button:active {
     transform: translateY(1px);
 }
+
+/* Barra desplegable*/
+#dieSelect {
+    padding: 12px 35px 12px 15px;
+    margin: 5px;
+    background: var(--primary-color);
+    border: 2px solid var(--border-color);
+    border-radius: 6px;
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    cursor: pointer;
+    appearance: none;
+    position: relative;
+    transition: all 0.3s ease;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2364FFDA'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 12px;
+}
+
+#dieSelect:hover {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 8px rgba(100, 255, 218, 0.2);
+}
+
+#dieSelect:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 12px rgba(100, 255, 218, 0.3);
+}
+
+/* Estilo para las opciones */
+#dieSelect option {
+    background: var(--primary-dark);
+    color: var(--text-primary);
+    padding: 12px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+#dieSelect option:hover {
+    background: var(--accent-color);
+    color: var(--primary-dark);
+}
+
+#dieSelect option:checked {
+    background: var(--accent-color);
+    color: var(--primary-dark);
+    font-weight: 600;
+}
