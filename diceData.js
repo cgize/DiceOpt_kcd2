@@ -37,6 +37,28 @@ const diceDB = {
     "Normal Die": [16.7,16.7,16.7,16.7,16.7,16.7]
 };
 
+const diceImages = {
+    "Aranka's die": "https://kingdomcomedeliverance2.wiki.fextralife.com/file/Kingdom-Come-Deliverance-2/arankas_die.png",
+    "Cautious cheater's die": "https://kingdomcomedeliverance2.wiki.fextralife.com/file/Kingdom-Come-Deliverance-2/cautious_cheaters_die.png",
+    "Ci die": "https://kingdomcomedeliverance2.wiki.fextralife.com/file/Kingdom-Come-Deliverance-2/ci_die.png",
+    "Devil's head die": "https://kingdomcomedeliverance2.wiki.fextralife.com/file/Kingdom-Come-Deliverance-2/devils_head_die.png",
+    "Die of misfortune": "https://kingdomcomedeliverance2.wiki.fextralife.com/file/Kingdom-Come-Deliverance-2/die_of_misfortune.png",
+    "Even die": "https://kingdomcomedeliverance2.wiki.fextralife.com/file/Kingdom-Come-Deliverance-2/even_die.png",
+    "Favourable die": "https://kingdomcomedeliverance2.wiki.fextralife.com/file/Kingdom-Come-Deliverance-2/favourable_die.png",
+    "Fer die": "https://kingdomcomedeliverance2.wiki.fextralife.com/file/Kingdom-Come-Deliverance-2/fer_die.png",
+    "Greasy die": "https://kingdomcomedeliverance2.wiki.fextralife.com/file/Kingdom-Come-Deliverance-2/greasy_die.png",
+    "Grimy die": "https://kingdomcomedeliverance2.wiki.fextralife.com/file/Kingdom-Come-Deliverance-2/grimy_die.png",
+    "Grozav's lucky die": "https://kingdomcomedeliverance2.wiki.fextralife.com/file/Kingdom-Come-Deliverance-2/grozavs_lucky_die.png",
+    "Holy Trinity die": "https://kingdomcomedeliverance2.wiki.fextralife.com/file/Kingdom-Come-Deliverance-2/holy_trinity_die.png",
+    "Hugo's Die": "https://kingdomcomedeliverance2.wiki.fextralife.com/file/Kingdom-Come-Deliverance-2/hugos_die.png",
+    "King's die": "https://kingdomcomedeliverance2.wiki.fextralife.com/file/Kingdom-Come-Deliverance-2/kings_die.png",
+    "Lousy gambler's die": "https://kingdomcomedeliverance2.wiki.fextralife.com/file/Kingdom-Come-Deliverance-2/lousy_gamblers_die.png",
+    "Lu die": "https://kingdomcomedeliverance2.wiki.fextralife.com/file/Kingdom-Come-Deliverance-2/lu_die.png",
+    "Lucky Die": "https://kingdomcomedeliverance2.wiki.fextralife.com/file/Kingdom-Come-Deliverance-2/lucky_die.png",
+    "Mathematician's Die": "https://kingdomcomedeliverance2.wiki.fextralife.com/file/Kingdom-Come-Deliverance-2/mathematicians_die.png",
+    "Molar die": "https://kingdomcomedeliverance2.wiki.fextralife.com/file/Kingdom-Come-Deliverance-2/molar_die.png"
+};
+
 // Initialize die selector
 const dieSelect = document.getElementById('dieSelect');
 Object.keys(diceDB).forEach(dieName => {
