@@ -33,13 +33,38 @@ body {
     min-width: 0;
 }
 
-.section { 
+.section, .usage-instructions, .scoring-rules { 
     margin: 20px 0; 
-    padding: 15px; 
+    padding: 20px; 
     border: 1px solid var(--border-color); 
     border-radius: 8px;
     background: var(--primary-color);
     box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    color: var(--text-primary);
+    font-size: 1rem;
+}
+
+.usage-instructions h3, .scoring-rules h3 {
+    font-size: 1.4rem;
+    margin-bottom: 15px;
+    color: var(--accent-color);
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 8px;
+}
+
+.instruction-step, .scoring-rule {
+    margin: 10px 0;
+    padding: 12px;
+    background: #112240;
+    border-left: 3px solid var(--accent-color);
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+}
+
+.instruction-step::before, .scoring-rule::before {
+    content: "🔹 ";
+    color: var(--accent-color);
+    margin-right: 5px;
 }
 
 .progress-bar {
@@ -178,28 +203,6 @@ button:hover {
     align-items: center;
     justify-content: center;
     box-shadow: 0 2px 6px rgba(255, 77, 77, 0.3);
-}
-
-.scoring-rules {
-    margin-top: 30px;
-}
-
-.scoring-rule {
-    margin: 10px 0;
-    padding: 12px;
-    background: #112240;
-    border-left: 3px solid var(--accent-color);
-    color: var(--text-secondary);
-    font-size: 0.95rem;
-}
-
-.usage-instructions {
-    margin: 10px 0;
-    padding: 12px;
-    background: #112240;
-    border-left: 3px solid var(--accent-color);
-    color: var(--text-secondary);
-    font-size: 0.95rem;
 }
 
 .die-icon-small {
@@ -363,7 +366,7 @@ h3 {
         font-size: 1.4rem;
     }
     
-    .scoring-rule {
+    .scoring-rule, .usage-instructions {
         font-size: 1rem;
         padding: 15px;
     }
@@ -377,7 +380,7 @@ button:active {
     transform: translateY(1px);
 }
 
-/* Barra desplegable*/
+/* Barra desplegable */
 #dieSelect {
     padding: 12px 35px 12px 15px;
     margin: 5px;
@@ -407,7 +410,6 @@ button:active {
     box-shadow: 0 0 12px rgba(100, 255, 218, 0.3);
 }
 
-/* Estilo para las opciones */
 #dieSelect option {
     background: var(--primary-dark);
     color: var(--text-primary);
