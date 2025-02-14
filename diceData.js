@@ -39,88 +39,83 @@ const diceDB = {
 };
 
 const diceImages = {
-    "Aranka's Die": "images/die_f_icon.png",
-    "Cautious Cheater's Die": "images/die_b_icon.png",
-    "Ci Die": "images/die_r_icon.png",
-    "Devil's Head Die": "images/die_r_devil_icon.png",
-    "Die of Misfortune": "images/die_c_icon.png",
-    "Even Die": "images/die_i_icon.png",
-    "Favorable Die": "images/die_j_icon.png",
-    "Fer Die": "images/die_r_icon.png",
-    "Greasy Die": "images/die_g_icon.png",
-    "Grimy Die": "images/die_e_icon.png",
-    "Grozav's Lucky Die": "images/die_m_icon.png",
-    "Heavenly Kingdom Die": "images/die_kcd_icon.png",
-    "Holy Trinity Die": "images/die_g_icon.png",
-    "Hugo's Die": "images/die_h_icon.png",
-    "King's Die": "images/die_k_icon.png",
-    "Lousy Gambler's Die": "images/die_d_icon.png",
-    "Lu Die": "images/die_r_icon.png",
-    "Lucky Die": "images/die_o_icon.png",
-    "Mathematician's Die": "images/die_j_icon.png",
-    "Molar Die": "images/die_c_icon.png",
-    "Odd Die": "images/die_k_icon.png",
-    "Ordinary Die": "images/die_g_icon.png",
-    "Painted Die": "images/die_l_icon.png",
-    "Pie Die": "images/die_p_icon.png",
-    "Premolar Die": "images/die_c_icon.png",
-    "Sad Greaser's Die": "images/die_q_icon.png",
-    "Saint Antiochus' Die": "images/die_q_icon.png",
-    "Shrinking Die": "images/die_h_icon.png",
-    "St. Stephen's Die": "images/die_g_icon.png",
-    "Strip Die": "images/die_o_icon.png",
-    "Three Die": "images/die_r_icon.png",
-    "Unbalanced Die": "images/die_b_icon.png",
-    "Unlucky Die": "images/die_e_icon.png",
-    "Wagoner's Die": "images/die_a_icon.png",
-    "Weighted Die": "images/die_f_icon.png",
-    "Normal Die": "images/die_g_icon.png"
+    "Aranka's Die": "img/dice/die_f.png",
+    "Cautious Cheater's Die": "img/dice/die_b.png",
+    "Ci Die": "img/dice/die_r.png",
+    "Devil's Head Die": "img/dice/die_devil.png",
+    "Die of Misfortune": "img/dice/die_c.png",
+    "Even Die": "img/dice/die_i.png",
+    "Favorable Die": "img/dice/die_j.png",
+    "Fer Die": "img/dice/die_r.png",
+    "Greasy Die": "img/dice/die_g.png",
+    "Grimy Die": "img/dice/die_e.png",
+    "Grozav's Lucky Die": "img/dice/die_m.png",
+    "Heavenly Kingdom Die": "img/dice/die_heaven.png",
+    "Holy Trinity Die": "img/dice/die_holy.png",
+    "Hugo's Die": "img/dice/die_h.png",
+    "King's Die": "img/dice/die_k.png",
+    "Lousy Gambler's Die": "img/dice/die_d.png",
+    "Lu Die": "img/dice/die_r.png",
+    "Lucky Die": "img/dice/die_lucky.png",
+    "Mathematician's Die": "img/dice/die_math.png",
+    "Molar Die": "img/dice/die_molar.png",
+    "Odd Die": "img/dice/die_odd.png",
+    "Ordinary Die": "img/dice/die_ordinary.png",
+    "Painted Die": "img/dice/die_painted.png",
+    "Pie Die": "img/dice/die_pie.png",
+    "Premolar Die": "img/dice/die_premolar.png",
+    "Sad Greaser's Die": "img/dice/die_sad.png",
+    "Saint Antiochus' Die": "img/dice/die_saint.png",
+    "Shrinking Die": "img/dice/die_shrink.png",
+    "St. Stephen's Die": "img/dice/die_stephen.png",
+    "Strip Die": "img/dice/die_strip.png",
+    "Three Die": "img/dice/die_three.png",
+    "Unbalanced Die": "img/dice/die_unbalanced.png",
+    "Unlucky Die": "img/dice/die_unlucky.png",
+    "Wagoner's Die": "img/dice/die_wagon.png",
+    "Weighted Die": "img/dice/die_weighted.png",
+    "Normal Die": "img/dice/die_normal.png"
 };
 
 // Sistema de selección de dados
 const dieSelect = document.getElementById('dieSelect');
-const searchInput = document.createElement('input');
-searchInput.setAttribute('type', 'text');
-searchInput.setAttribute('placeholder', translations.search_dice);
-searchInput.classList.add('search-input');
-dieSelect.parentNode.insertBefore(searchInput, dieSelect);
+const searchInput = document.querySelector('.search-input') || document.createElement('input');
+
+if (!document.querySelector('.search-input')) {
+    searchInput.className = 'search-input';
+    searchInput.placeholder = translations.search_dice;
+    dieSelect.parentNode.insertBefore(searchInput, dieSelect);
+}
+
+// Búsqueda con debounce
+let searchTimeout;
+searchInput.addEventListener('input', function(e) {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => populateDiceOptions(e.target.value), 300);
+});
 
 function populateDiceOptions(filter = '') {
     dieSelect.innerHTML = '';
-    Object.keys(diceDB).forEach(dieName => {
-        if(dieName.toLowerCase().includes(filter.toLowerCase())) {
+    Object.keys(diceDB)
+        .filter(name => name.toLowerCase().includes(filter.toLowerCase()))
+        .forEach(name => {
             const option = document.createElement('option');
-            option.value = dieName;
-            option.textContent = dieName;
+            option.value = name;
+            option.textContent = name;
             dieSelect.appendChild(option);
-        }
-    });
+        });
 }
 
-let searchTimeout;
-searchInput.addEventListener('input', (e) => {
-    clearTimeout(searchTimeout);
-    searchTimeout = setTimeout(() => {
-        populateDiceOptions(e.target.value);
-    }, 300);
-});
-
-// Estado y funciones de dados
+// Gestión de dados seleccionados
 let selectedDice = [];
 
 function addDie() {
-    const dieName = dieSelect.value;
-    if(dieName && diceDB[dieName]) {
-        selectedDice.push(dieName);
+    const die = dieSelect.value;
+    if (diceDB[die] && selectedDice.length < 6) {
+        selectedDice.push(die);
         updateDicePool();
         updateFillButton();
     }
-}
-
-function clearDice() {
-    selectedDice = [];
-    updateDicePool();
-    updateFillButton();
 }
 
 function removeDie(index) {
@@ -129,69 +124,60 @@ function removeDie(index) {
     updateFillButton();
 }
 
-function updateFillButton() {
-    const fillButton = document.getElementById('fillDice');
-    const fillCount = Math.max(0, 6 - selectedDice.length);
-    fillButton.classList.toggle('visible', fillCount > 0);
-    document.getElementById('fillCount').textContent = fillCount;
-}
-
-function fillWithNormalDice() {
-    const needed = Math.max(0, 6 - selectedDice.length);
-    if (needed > 0) {
-        selectedDice.push(...Array(needed).fill('Normal Die'));
-        updateDicePool();
-        updateFillButton();
-    }
+function clearDice() {
+    selectedDice = [];
+    updateDicePool();
+    updateFillButton();
 }
 
 function updateDicePool() {
     const pool = document.getElementById('dicePool');
     pool.innerHTML = selectedDice.map((die, index) => `
-        <div class="die-details">
-            <button class="remove-btn" onclick="removeDie(${index})">×</button>
-            <div class="die-title">
-                <img src="${diceImages[die]}" 
-                     class="die-icon-small" 
-                     alt="${die}" 
-                     title="${die}">
-                ${die}
+        <div class="die-card">
+            <button class="remove-btn" onclick="removeDie(${index})">&times;</button>
+            <img src="${diceImages[die]}" 
+                 class="die-preview" 
+                 alt="${die}" 
+                 title="${die}">
+            <div class="die-stats">
+                ${diceDB[die].map((p, i) => `
+                    <div class="die-face">
+                        <span>${i + 1}</span>
+                        <progress value="${p}" max="100"></progress>
+                        <span>${p.toFixed(1)}%</span>
+                    </div>
+                `).join('')}
             </div>
-            <table class="die-table">
-                <tr class="die-header">${[1,2,3,4,5,6].map(n => `<th>${n}</th>`).join('')}</tr>
-                <tr>${diceDB[die].map(p => `<td>${p.toFixed(1)}%</td>`).join('')}</tr>
-            </table>
         </div>
     `).join('');
 }
 
 // Sistema de presets
-const presetsKey = 'dicePresets';
+const presetsKey = 'diceOptimizerPresets';
 let presets = JSON.parse(localStorage.getItem(presetsKey)) || {};
 
-function savePreset(presetName) {
-    const name = presetName.trim();
-    if (!name) return alert(translations.invalid_preset_name);
-    if (presets[name]) return alert(translations.preset_exists);
+function savePreset(name) {
+    const presetName = name.trim();
+    if (!presetName) return alert(translations.invalid_preset_name);
+    if (presets[presetName]) return alert(translations.preset_exists);
     if (selectedDice.length === 0) return alert(translations.no_dice_to_save);
     
-    presets[name] = selectedDice.slice();
+    presets[presetName] = selectedDice.slice();
     localStorage.setItem(presetsKey, JSON.stringify(presets));
     updatePresetSelector();
-    alert(translations.preset_saved);
 }
 
-function loadPreset(presetName) {
-    if (presets[presetName]) {
-        selectedDice = presets[presetName].slice();
+function loadPreset(name) {
+    if (presets[name]) {
+        selectedDice = [...presets[name]];
         updateDicePool();
         updateFillButton();
     }
 }
 
-function deletePreset(presetName) {
-    if (confirm(`${translations.confirm_delete} "${presetName}"?`)) {
-        delete presets[presetName];
+function deletePreset(name) {
+    if (presets[name] && confirm(translations.confirm_delete)) {
+        delete presets[name];
         localStorage.setItem(presetsKey, JSON.stringify(presets));
         updatePresetSelector();
     }
@@ -209,10 +195,32 @@ function updatePresetSelector() {
     });
 }
 
+// Completa con dados normales
+function updateFillButton() {
+    const fillCount = 6 - selectedDice.length;
+    const fillButton = document.getElementById('fillDice');
+    
+    if (fillCount > 0) {
+        fillButton.style.display = 'inline-block';
+        document.getElementById('fillCount').textContent = fillCount;
+    } else {
+        fillButton.style.display = 'none';
+    }
+}
+
+function fillWithNormalDice() {
+    const needed = 6 - selectedDice.length;
+    if (needed > 0) {
+        selectedDice.push(...Array(needed).fill('Normal Die'));
+        updateDicePool();
+        updateFillButton();
+    }
+}
+
 // Inicialización
 document.addEventListener('DOMContentLoaded', () => {
     populateDiceOptions();
     updatePresetSelector();
-    updateTranslations();
-    if(typeof applyTranslations === 'function') applyTranslations();
+    updateFillButton();
+    if (typeof applyTranslations === 'function') applyTranslations();
 });
