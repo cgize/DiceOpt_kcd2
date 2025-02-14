@@ -23,8 +23,6 @@ body {
 .sidebar { 
     padding-right: 20px; 
     border-right: 2px solid var(--border-color);
-    background: var(--primary-color);
-    position: sticky;
     top: 20px;
     height: fit-content;
 }
