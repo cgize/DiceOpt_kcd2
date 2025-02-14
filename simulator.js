@@ -27,10 +27,12 @@ const calculateScore = (roll) => {
 };
 
 function getUniqueCombinations(selectedDice) {
-    const normalized = selectedDice.length >= 6 
-        ? selectedDice.slice(0, 6) 
-        : [...selectedDice, ...Array(6 - selectedDice.length).fill('Normal Die')];
+    // Paso 1: Rellenar con Normal Die si hay menos de 6
+    const normalized = selectedDice.length < 6 
+        ? [...selectedDice, ...Array(6 - selectedDice.length).fill('Normal Die')]
+        : selectedDice.slice(0, 20); // Limitar a máximo 20 dados para rendimiento
 
+    // Paso 2: Generar combinaciones de 6 dados
     const diceCounts = normalized.reduce((acc, die) => {
         acc[die] = (acc[die] || 0) + 1;
         return acc;
@@ -120,10 +122,16 @@ const worker = new Worker(URL.createObjectURL(blob));
 
 let finalResults = [];
 let currentSimulation = null;
+const MAX_DICE = 30;
 
 function startSimulation() {
     if (selectedDice.length === 0) {
         alert(translations.no_dice_selected);
+        return;
+    }
+    
+    if (selectedDice.length > MAX_DICE) {
+        alert(translations.max_dice_error.replace('{MAX_DICE}', MAX_DICE));
         return;
     }
 
@@ -173,10 +181,10 @@ function startSimulation() {
     };
 
     // Dividir en chunks y procesar
-    const CHUNK_SIZE = 25; // Optimizado para balancear rendimiento/responsividad
+    const CHUNK_SIZE = 25;
     for (let i = 0; i < combinations.length; i += CHUNK_SIZE) {
         const chunk = combinations.slice(i, i + CHUNK_SIZE);
-        worker.postMessage([chunk, 1000]); // 1000 simulaciones por combinación
+        worker.postMessage([chunk, 1000]);
     }
 }
 

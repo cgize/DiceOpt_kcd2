@@ -6,7 +6,6 @@ const translations = {
   "simulation": "Simulation",
   "add_die": "Add Die",
   "clear": "Clear",
-  "fill_normal": "Fill with Normal Die (+",
   "calculate": "Calculate Combinations",
   "how_we_choose": "How do we choose the best combinations?",
   "top_combinations": "Top Combinations",
@@ -30,5 +29,6 @@ const translations = {
   "invalid_preset_name": "Preset name cannot be empty!",
   "search_dice": "Search dice...",
   "simulation_error": "Error during simulation!",
-  "preset_exists": "Preset name already exists!"
+  "preset_exists": "Preset name already exists!",
+  "max_dice_error": "Maximum {MAX_DICE} dice allowed for performance",
 };

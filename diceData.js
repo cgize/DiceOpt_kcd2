@@ -108,13 +108,12 @@ searchInput.addEventListener('input', (e) => {
 // Estado de dados seleccionados
 let selectedDice = [];
 
-// Función para añadir dados con validación
+// Función para añadir dados
 function addDie() {
     const dieName = dieSelect.value;
-    if (selectedDice.length < 6 && diceDB.hasOwnProperty(dieName)) {
+    if (diceDB.hasOwnProperty(dieName)) {
         selectedDice.push(dieName);
         updateDicePool();
-        updateFillButton();
     }
 }
 
@@ -122,7 +121,6 @@ function addDie() {
 function clearDice() {
     selectedDice = [];
     updateDicePool();
-    updateFillButton();
 }
 
 // Función para eliminar dado específico
@@ -130,25 +128,6 @@ function removeDie(index) {
     if (index >= 0 && index < selectedDice.length) {
         selectedDice.splice(index, 1);
         updateDicePool();
-        updateFillButton();
-    }
-}
-
-// Actualizar botón de completar
-function updateFillButton() {
-    const fillButton = document.getElementById('fillDice');
-    const fillCount = Math.max(0, 6 - selectedDice.length);
-    fillButton.style.display = fillCount > 0 ? 'inline-block' : 'none';
-    document.getElementById('fillCount').textContent = fillCount;
-}
-
-// Completar con dados normales
-function fillWithNormalDice() {
-    const needed = Math.max(0, 6 - selectedDice.length);
-    if (needed > 0) {
-        selectedDice.push(...Array(needed).fill('Normal Die'));
-        updateDicePool();
-        updateFillButton();
     }
 }
 
@@ -195,7 +174,6 @@ function loadPreset(presetName) {
     if (presets[presetName]) {
         selectedDice = [...presets[presetName]];
         updateDicePool();
-        updateFillButton();
     }
 }
 
@@ -226,6 +204,5 @@ function updatePresetSelector() {
 document.addEventListener('DOMContentLoaded', () => {
     populateDiceOptions();
     updatePresetSelector();
-    updateFillButton();
     if (typeof updateTranslations === 'function') updateTranslations();
 });

@@ -6,7 +6,6 @@ const translations = {
   "simulation": "Simulación",
   "add_die": "Añadir Dado",
   "clear": "Limpiar",
-  "fill_normal": "Completar con Dado Normal (+",
   "calculate": "Calcular Combinaciones",
   "how_we_choose": "¿Cómo elegimos las mejores combinaciones?",
   "top_combinations": "Mejores Combinaciones",
@@ -36,5 +35,6 @@ const translations = {
   "wildcards": "Comodines",
   "no_combinations": "¡No se encontraron combinaciones!",
   "try_adding_special_dice": "Prueba añadiendo dados especiales",
-  "preset_name_placeholder": "Nombre del preset"
+  "preset_name_placeholder": "Nombre del preset",
+  "max_dice_error": "Máximo {MAX_DICE} dados permitidos por rendimiento",
 };
