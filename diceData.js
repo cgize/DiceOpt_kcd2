@@ -40,21 +40,21 @@ const diceDB = {
 
 const diceImages = {
     "Aranka's Die": "/DiceOpt_kcd2/src/die_f_icon.png",
-    "Cautious cheater's Die": "/DiceOpt_kcd2/src/die_b_icon.png",
+    "Cautious Cheater's Die": "/DiceOpt_kcd2/src/die_b_icon.png",
     "Ci Die": "/DiceOpt_kcd2/src/die_r_icon.png",
-    "Devil's head Die": "/DiceOpt_kcd2/src/die_r_devil_icon.png",
-    "Die of misfortune": "/DiceOpt_kcd2/src/die_c_icon.png",
+    "Devil's Head Die": "/DiceOpt_kcd2/src/die_r_devil_icon.png",
+    "Die of Misfortune": "/DiceOpt_kcd2/src/die_c_icon.png",
     "Even Die": "/DiceOpt_kcd2/src/die_i_icon.png",
-    "Favourable Die": "/DiceOpt_kcd2/src/die_j_icon.png",
+    "Favorable Die": "/DiceOpt_kcd2/src/die_j_icon.png",
     "Fer Die": "/DiceOpt_kcd2/src/die_r_icon.png",
     "Greasy Die": "/DiceOpt_kcd2/src/die_g_icon.png",
     "Grimy Die": "/DiceOpt_kcd2/src/die_e_icon.png",
-    "Grozav's lucky Die": "/DiceOpt_kcd2/src/die_m_icon.png",
+    "Grozav's Lucky Die": "/DiceOpt_kcd2/src/die_m_icon.png",
     "Heavenly Kingdom Die": "/DiceOpt_kcd2/src/die_kcd_icon.png",
     "Holy Trinity Die": "/DiceOpt_kcd2/src/die_g_icon.png",
     "Hugo's Die": "/DiceOpt_kcd2/src/die_h_icon.png",
     "King's Die": "/DiceOpt_kcd2/src/die_k_icon.png",
-    "Lousy gambler's Die": "/DiceOpt_kcd2/src/die_d_icon.png",
+    "Lousy Gambler's Die": "/DiceOpt_kcd2/src/die_d_icon.png",
     "Lu Die": "/DiceOpt_kcd2/src/die_r_icon.png",
     "Lucky Die": "/DiceOpt_kcd2/src/die_o_icon.png",
     "Mathematician's Die": "/DiceOpt_kcd2/src/die_j_icon.png",
@@ -99,6 +99,14 @@ function populateDiceOptions(filter = '') {
 
 searchInput.addEventListener('input', (e) => {
     populateDiceOptions(e.target.value);
+});
+
+let searchTimeout;
+searchInput.addEventListener('input', (e) => {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => {
+        populateDiceOptions(e.target.value);
+    }, 300);
 });
 
 // Inicializar
@@ -166,6 +174,9 @@ const presetsKey = 'dicePresets';
 let presets = JSON.parse(localStorage.getItem(presetsKey)) || {};
 
 function savePreset(presetName) {
+    const name = presetName.trim();
+    if (!name) return alert(translations.invalid_preset_name);
+    if (presets[name]) return alert(translations.preset_exists);
     if (selectedDice.length === 0) return alert(translations.no_dice_to_save);
     
     presets[presetName] = selectedDice.slice();

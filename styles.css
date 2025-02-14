@@ -415,3 +415,10 @@ button:active {
     border-color: var(--accent-color);
     box-shadow: 0 0 12px rgba(100, 255, 218, 0.3);
 }
+
+@media (max-width: 480px) {
+    .search-input {
+        font-size: 1rem;
+        padding: 14px;
+    }
+}

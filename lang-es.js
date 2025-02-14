@@ -6,7 +6,7 @@ const translations = {
   "simulation": "Simulación",
   "add_die": "Añadir Dado",
   "clear": "Limpiar",
-  "fill_normal": "Completar con Normal Die (+",
+  "fill_normal": "Completar con Dado Normal (+",
   "calculate": "Calcular Combinaciones",
   "how_we_choose": "¿Cómo elegimos las mejores combinaciones?",
   "top_combinations": "Mejores Combinaciones",
@@ -30,4 +30,5 @@ const translations = {
   "invalid_preset_name": "¡El nombre del preset no puede estar vacío!",
   "search_dice": "Buscar dados...",
   "simulation_error": "¡Error en la simulación!"
+  "preset_exists": "¡El nombre del preset ya existe!"
 };

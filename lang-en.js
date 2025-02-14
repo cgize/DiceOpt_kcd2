@@ -29,5 +29,6 @@ const translations = {
   "no_dice_selected": "Please select dice first!",
   "invalid_preset_name": "Preset name cannot be empty!",
   "search_dice": "Search dice...",
-  "simulation_error": "Error during simulation!"
+  "simulation_error": "Error during simulation!",
+  "preset_exists": "Preset name already exists!"
 };
