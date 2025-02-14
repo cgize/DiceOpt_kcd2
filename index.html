@@ -44,11 +44,6 @@
 
         <div id="results"></div>
 
-        <div class="usage-instructions">
-            <h3 data-i18n="instructions">Usage Instructions</h3>
-            <!-- Dynamic steps will be injected here -->
-        </div>
-
         <div class="scoring-rules">
             <h3 data-i18n="how_we_choose">How do we choose the best combinations?</h3>
             <!-- Dynamic steps will be injected here -->
@@ -57,35 +52,20 @@
 
     <script src="diceData.js"></script>
     <script>
-        // Language detection
         const userLang = navigator.language || navigator.userLanguage;
         const langCode = userLang.split('-')[0];
         const lang = langCode === 'es' ? 'es' : 'en';
-        
-        // Load translations
         document.write(`<script src="lang-${lang}.js"><\/script>`);
     </script>
     <script src="simulator.js"></script>
     <script>
-        // Translation function
         function applyTranslations() {
-            // Simple texts
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
                 if (translations[key]) {
                     el.textContent = translations[key];
                 }
             });
-
-            // Dynamic lists
-            const instructionContainer = document.querySelector('.usage-instructions');
-            instructionContainer.innerHTML = `
-                <h3 data-i18n="instructions">${translations.instructions}</h3>
-                ${translations.instruction_steps.map((step, i) => `
-                    <div class="instruction-step">${i + 1}. ${step}</div>
-                `).join('')}
-            `;
-
             const scoringContainer = document.querySelector('.scoring-rules');
             scoringContainer.innerHTML = `
                 <h3 data-i18n="how_we_choose">${translations.how_we_choose}</h3>
@@ -94,8 +74,6 @@
                 `).join('')}
             `;
         }
-
-        // Apply translations on load
         window.addEventListener('DOMContentLoaded', applyTranslations);
     </script>
 </body>

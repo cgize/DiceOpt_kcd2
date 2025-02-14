@@ -1,13 +1,13 @@
 // simulator.js
 const calculateScore = (roll) => {
     const counts = Array(6).fill(0);
-    roll.forEach(n => counts[n-1]++);
+    roll.forEach(n => counts[n - 1]++);
 
     let score = 0;
     const baseScores = [1000, 200, 300, 400, 500, 600];
 
     // Singles
-    score += counts[0] * 100; 
+    score += counts[0] * 100;
     score += counts[4] * 50;
 
     // Triples y múltiplos
@@ -18,8 +18,8 @@ const calculateScore = (roll) => {
     });
 
     // Escaleras
-    if ([1,2,3,4,5].every(n => counts[n-1] >= 1)) score += 500;
-    if ([2,3,4,5,6].every(n => counts[n-1] >= 1)) score += 750;
+    if ([1, 2, 3, 4, 5].every(n => counts[n - 1] >= 1)) score += 500;
+    if ([2, 3, 4, 5, 6].every(n => counts[n - 1] >= 1)) score += 750;
     if (counts.every(c => c >= 1)) score += 1500;
 
     return score;
@@ -28,20 +28,20 @@ const calculateScore = (roll) => {
 function getUniqueCombinations(dice, maxSize) {
     const counts = {};
     dice.forEach(die => counts[die] = (counts[die] || 0) + 1);
-    
+
     const combinations = [];
     const dieTypes = Object.keys(counts);
-    
+
     function generate(index, currentCombo, currentCount) {
-        if(currentCount > maxSize) return;
-        if(currentCount > 0) combinations.push([...currentCombo]);
-        
-        if(index >= dieTypes.length) return;
-        
+        if (currentCount > maxSize) return;
+        if (currentCount > 0) combinations.push([...currentCombo]);
+
+        if (index >= dieTypes.length) return;
+
         const die = dieTypes[index];
         const max = Math.min(counts[die], maxSize - currentCount);
-        
-        for(let i = 0; i <= max; i++) {
+
+        for (let i = 0; i <= max; i++) {
             generate(
                 index + 1,
                 i > 0 ? [...currentCombo, ...Array(i).fill(die)] : currentCombo,
@@ -49,7 +49,7 @@ function getUniqueCombinations(dice, maxSize) {
             );
         }
     }
-    
+
     generate(0, [], 0);
     return combinations.filter(c => c.length <= maxSize && c.length > 0);
 }
@@ -89,39 +89,46 @@ self.onmessage = (e) => {
 };
 `;
 
-const blob = new Blob([workerCode], {type: 'application/javascript'});
+const blob = new Blob([workerCode], { type: 'application/javascript' });
 const worker = new Worker(URL.createObjectURL(blob));
 
 let finalResults = [];
 
 function startSimulation() {
-    if(selectedDice.length < 1) return alert("¡Selecciona dados primero!");
-    
+    if (selectedDice.length < 1) return alert(translations.no_dice_selected);
+
     const combinations = getUniqueCombinations(selectedDice, 6);
     const progress = document.getElementById('progress');
     const resultsDiv = document.getElementById('results');
-    
-    resultsDiv.innerHTML = "<h3>Calculando...</h3>";
+
+    resultsDiv.innerHTML = `<h3>${translations.calculating}</h3>`;
     progress.style.width = '0%';
     finalResults = [];
 
     worker.onmessage = (e) => {
         const chunkResults = e.data;
         finalResults = finalResults.concat(chunkResults);
-        
+
         const processed = finalResults.length;
         const total = combinations.length;
         progress.style.width = `${(processed / total) * 100}%`;
-        
-        if(processed >= total) {
+
+        if (processed >= total) {
             const sortedResults = finalResults.sort((a, b) => b.score - a.score);
             displayResults(sortedResults.slice(0, 5));
         }
     };
 
+    worker.onerror = (e) => {
+        console.error('Worker error:', e);
+        alert(translations.simulation_error);
+        progress.style.width = '0%';
+        resultsDiv.innerHTML = `<h3>${translations.simulation_failed}</h3>`;
+    };
+
     // Dividir en chunks de 10 combinaciones
     const chunkSize = 10;
-    for(let i = 0; i < combinations.length; i += chunkSize) {
+    for (let i = 0; i < combinations.length; i += chunkSize) {
         const chunk = combinations.slice(i, i + chunkSize);
         worker.postMessage([chunk, 1000]); // 1000 simulaciones por chunk
     }
@@ -134,21 +141,29 @@ function displayResults(results) {
     ${results.map((r, i) => `
         <div class="result-item">
             <div class="result-header">
-                <span class="result-rank">#${i+1}</span>
+                <span class="result-rank">#${i + 1}</span>
                 <span class="result-score">${r.score.toFixed(1)} ${translations.points}</span>
             </div>
-                <div class="result-dice">
-                    ${r.combination.map(die => `
-                        <div class="die-container">
-                            <img src="${diceImages[die]}" 
-                                 class="die-icon" 
-                                 alt="${die.replace("'s", "")}" 
-                                 title="${die}">
-                            <div class="die-label">${die.split(' ')[0]}</div>
-                        </div>
-                    `).join('')}
-                </div>
+            <div class="result-dice">
+                ${r.combination.map(die => `
+                    <div class="die-container">
+                        <img src="${diceImages[die]}" 
+                             class="die-icon" 
+                             alt="${die}" 
+                             title="${die}">
+                        <div class="die-label">${die.split(' ')[0]}</div>
+                    </div>
+                `).join('')}
             </div>
-        `).join('')}
+        </div>
+    `).join('')}
     `;
 }
+
+// Nuevas funciones para manejar traducciones dinámicas
+function updateTranslations() {
+    document.getElementById('presetName').placeholder = translations.preset_name_placeholder;
+}
+
+// Inicializar traducciones al cargar
+document.addEventListener('DOMContentLoaded', updateTranslations);
