@@ -6,19 +6,25 @@ const calculateScore = (roll) => {
     let score = 0;
     const baseScores = [1000, 200, 300, 400, 500, 600];
 
-    // Cálculo de triples
-    counts.forEach((count, i) => {
-        if (count >= 3) score += baseScores[i] * Math.pow(2, count - 3);
-    });
-
-    // Escaleras
-    if (score === 0) {
-        if ([1, 2, 3, 4, 5].every(n => counts[n - 1] >= 1)) score += 500;
-        if ([2, 3, 4, 5, 6].every(n => counts[n - 1] >= 1)) score += 750;
-        if (counts.every(c => c >= 1)) score += 1500;
+    // 1. Verificar secuencias (prioridad absoluta)
+    if (counts.every(c => c >= 1)) {
+        score = 1500;
+    } else if ([2, 3, 4, 5, 6].every(n => counts[n - 1] >= 1)) {
+        score = 750;
+    } else if ([1, 2, 3, 4, 5].every(n => counts[n - 1] >= 1)) {
+        score = 500;
     }
 
-    // Singles
+    // 2. Calcular triples si no hay secuencia
+    if (score === 0) {
+        counts.forEach((count, i) => {
+            if (count >= 3) {
+                score += baseScores[i] * Math.pow(2, count - 3);
+            }
+        });
+    }
+
+    // 3. Singles solo si no hay puntuación
     if (score === 0) {
         score += counts[0] * 100 + counts[4] * 50;
     }
@@ -26,13 +32,17 @@ const calculateScore = (roll) => {
     return score;
 };
 
-function getUniqueCombinations(selectedDice) {
-    // Paso 1: Rellenar con Normal Die si hay menos de 6
-    const normalized = selectedDice.length < 6 
-        ? [...selectedDice, ...Array(6 - selectedDice.length).fill('Normal Die')]
-        : selectedDice.slice(0, 20); // Limitar a máximo 20 dados para rendimiento
+const getUniqueCombinations = (selectedDice) => {
+    const MAX_DICE = 20;
+    const availableDice = selectedDice.slice(0, MAX_DICE);
+    
+    const normalized = availableDice.length < 6 
+    ? [
+        ...availableDice,
+        ...Array(6 - availableDice.length).fill('Normal Die')
+      ] 
+    : availableDice;
 
-    // Paso 2: Generar combinaciones de 6 dados
     const diceCounts = normalized.reduce((acc, die) => {
         acc[die] = (acc[die] || 0) + 1;
         return acc;
@@ -41,7 +51,7 @@ function getUniqueCombinations(selectedDice) {
     const combinations = [];
     const diceTypes = Object.keys(diceCounts);
     
-    const backtrack = (current, startIndex) => {
+    const backtrack = (current, startIndex, counts = {}) => {
         if (current.length === 6) {
             combinations.push([...current]);
             return;
@@ -49,36 +59,31 @@ function getUniqueCombinations(selectedDice) {
         
         for (let i = startIndex; i < diceTypes.length; i++) {
             const die = diceTypes[i];
-            const currentCount = current.filter(d => d === die).length;
-            
-            if (currentCount < diceCounts[die]) {
-                current.push(die);
-                backtrack(current, i);
-                current.pop();
+            if ((counts[die] || 0) < diceCounts[die]) {
+                backtrack(
+                    [...current, die],
+                    i,
+                    { ...counts, [die]: (counts[die] || 0) + 1 }
+                );
             }
         }
     };
 
     backtrack([], 0);
     return combinations;
-}
+};
 
-// Worker optimizado
 const workerCode = `
-const diceDB = ${JSON.stringify(diceDB)};
 const calculateScore = ${calculateScore.toString()};
+const diceDB = ${JSON.stringify(diceDB)};
 
 const simulateRoll = (combo) => {
     return combo.map(die => {
         const probs = diceDB[die];
-        const guaranteedFace = probs.findIndex(p => p === 100);
-        if (guaranteedFace !== -1) return guaranteedFace + 1;
-        
         let rand = Math.random() * 100;
-        let accum = 0;
         for (let f = 0; f < 6; f++) {
-            accum += probs[f];
-            if (rand <= accum) return f + 1;
+            if (rand <= probs[f]) return f + 1;
+            rand -= probs[f];
         }
         return 6;
     });
@@ -90,12 +95,11 @@ self.onmessage = (e) => {
     
     for (const combo of combinations) {
         let totalScore = 0;
-        
-        // Procesamiento por lotes para mejor rendimiento
         const batchSize = 500;
+        
         for (let i = 0; i < sims; i += batchSize) {
-            const iterations = Math.min(batchSize, sims - i);
             let batchTotal = 0;
+            const iterations = Math.min(batchSize, sims - i);
             
             for (let j = 0; j < iterations; j++) {
                 batchTotal += calculateScore(simulateRoll(combo));
@@ -106,10 +110,10 @@ self.onmessage = (e) => {
         results.push({
             combination: combo,
             score: totalScore / sims,
-            strategy: {
-                guaranteed: combo.filter(d => diceDB[d].some(p => p === 100)).length,
-                triples: combo.filter(d => diceDB[d][2] >= 30).length
-            }
+            composition: combo.reduce((acc, die) => {
+                acc[die] = (acc[die] || 0) + 1;
+                return acc;
+            }, {})
         });
     }
     
@@ -122,73 +126,52 @@ const worker = new Worker(URL.createObjectURL(blob));
 
 let finalResults = [];
 let currentSimulation = null;
-const MAX_DICE = 30;
 
-function startSimulation() {
+const startSimulation = () => {
     if (selectedDice.length === 0) {
         alert(translations.no_dice_selected);
         return;
     }
-    
-    if (selectedDice.length > MAX_DICE) {
-        alert(translations.max_dice_error.replace('{MAX_DICE}', MAX_DICE));
-        return;
-    }
 
-    // Resetear simulación anterior
     if (currentSimulation) worker.terminate();
     
     const combinations = getUniqueCombinations(selectedDice);
     const progress = document.getElementById('progress');
     const resultsDiv = document.getElementById('results');
 
-    // Inicializar estado
     resultsDiv.innerHTML = `<h3>${translations.calculating}</h3>`;
     progress.style.width = '0%';
     finalResults = [];
     currentSimulation = Date.now();
 
-    // Configurar handlers
     worker.onmessage = (e) => {
         if (currentSimulation === null) return;
 
-        finalResults = [...finalResults, ...e.data];
-        const totalCombinations = combinations.length;
-        
-        // Actualizar progreso
-        progress.style.width = `${Math.min(100, (finalResults.length / totalCombinations) * 100)}%`;
+        finalResults.push(...e.data);
+        progress.style.width = `${Math.min(100, (finalResults.length / combinations.length) * 100)}%`;
 
-        // Mostrar resultados finales
-        if (finalResults.length >= totalCombinations) {
-            const sorted = finalResults.sort((a, b) => {
-                // Orden principal por puntuación
-                if (b.score !== a.score) return b.score - a.score;
-                // Orden secundario por triples garantizados
-                return b.strategy.guaranteed - a.strategy.guaranteed;
-            });
-            
+        if (finalResults.length >= combinations.length) {
+            const sorted = finalResults.sort((a, b) => b.score - a.score);
             displayResults(sorted.slice(0, 5));
             currentSimulation = null;
         }
     };
 
     worker.onerror = (e) => {
-        console.error('Error en worker:', e);
+        console.error('Worker error:', e);
         alert(translations.simulation_error);
         progress.style.width = '0%';
         resultsDiv.innerHTML = `<h3>${translations.simulation_failed}</h3>`;
         currentSimulation = null;
     };
 
-    // Dividir en chunks y procesar
     const CHUNK_SIZE = 25;
     for (let i = 0; i < combinations.length; i += CHUNK_SIZE) {
-        const chunk = combinations.slice(i, i + CHUNK_SIZE);
-        worker.postMessage([chunk, 1000]);
+        worker.postMessage([combinations.slice(i, i + CHUNK_SIZE), 1000]);
     }
-}
+};
 
-function displayResults(results) {
+const displayResults = (results) => {
     const resultsDiv = document.getElementById('results');
     
     if (!results || results.length === 0) {
@@ -210,33 +193,18 @@ function displayResults(results) {
                 </div>
                 
                 <div class="dice-composition">
-                    ${result.combination.map(die => `
-                        <div class="die-group" data-tooltip="${die}: ${diceDB[die].map((p, i) => `${i+1}=${p.toFixed(1)}%`).join(' ')}">
+                    ${Object.entries(result.composition).map(([die, count]) => `
+                        <div class="die-group" 
+                             data-tooltip="${die}: ${diceDB[die].map((p, i) => `${i+1}=${p.toFixed(1)}%`).join(' ')}">
                             <img src="${diceImages[die]}" class="die-icon" alt="${die}">
-                            <span class="die-count">${result.combination.filter(d => d === die).length}</span>
+                            <span class="die-count">${count}</span>
                         </div>
                     `).join('')}
                 </div>
-                
-                <div class="strategy-analysis">
-                    ${result.strategy.guaranteed > 0 ? `
-                        <div class="strategy-badge guaranteed">
-                            <span>${result.strategy.guaranteed}x</span>
-                            ${translations.guaranteed_triples}
-                        </div>` : ''}
-                    
-                    ${result.strategy.triples > 0 ? `
-                        <div class="strategy-badge triple-boost">
-                            <span>${result.strategy.triples}x</span>
-                            ${translations.triple_boosters}
-                        </div>` : ''}
-                </div>
             </div>
         `).join('')}`;
-}
+};
 
-// Inicialización final
 document.addEventListener('DOMContentLoaded', () => {
-    if (typeof updateTranslations === 'function') updateTranslations();
     if (typeof populateDiceOptions === 'function') populateDiceOptions();
 });
