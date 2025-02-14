@@ -6,79 +6,80 @@ const calculateScore = (roll) => {
     let score = 0;
     const baseScores = [1000, 200, 300, 400, 500, 600];
 
-    // Singles
-    score += counts[0] * 100;
-    score += counts[4] * 50;
-
-    // Triples y múltiplos
+    // Triples con crecimiento exponencial
     counts.forEach((count, i) => {
-        if (count >= 3) {
-            score += baseScores[i] * (2 ** (count - 3));
-        }
+        if (count >= 3) score += baseScores[i] * Math.pow(2, count - 3);
     });
 
-    // Escaleras
-    if ([1, 2, 3, 4, 5].every(n => counts[n - 1] >= 1)) score += 500;
-    if ([2, 3, 4, 5, 6].every(n => counts[n - 1] >= 1)) score += 750;
-    if (counts.every(c => c >= 1)) score += 1500;
+    // Escaleras solo si no hay triples
+    if (score === 0) {
+        if ([1, 2, 3, 4, 5].every(n => counts[n - 1] >= 1)) score += 500;
+        if ([2, 3, 4, 5, 6].every(n => counts[n - 1] >= 1)) score += 750;
+        if (counts.every(c => c >= 1)) score += 1500;
+    }
+
+    // Singles solo si no hay triples ni escaleras
+    if (score === 0) {
+        score += counts[0] * 100 + counts[4] * 50;
+    }
 
     return score;
 };
 
 function getUniqueCombinations(dice, maxSize) {
-    const counts = {};
-    dice.forEach(die => counts[die] = (counts[die] || 0) + 1);
+    // Agrupar dados por tipo especial
+    const diceGroups = {
+        guaranteed: dice.filter(d => diceDB[d].some(p => p === 100)),
+        tripleMakers: dice.filter(d => diceDB[d][2] >= 30),
+        wildcards: dice.filter(d => !diceDB[d].some(p => p === 100) && diceDB[d][2] < 30)
+    };
 
-    const combinations = [];
-    const dieTypes = Object.keys(counts);
-
-    function generate(index, currentCombo, currentCount) {
-        if (currentCount > maxSize) return;
-        if (currentCount > 0) combinations.push([...currentCombo]);
-
-        if (index >= dieTypes.length) return;
-
-        const die = dieTypes[index];
-        const max = Math.min(counts[die], maxSize - currentCount);
-
-        for (let i = 0; i <= max; i++) {
-            generate(
-                index + 1,
-                i > 0 ? [...currentCombo, ...Array(i).fill(die)] : currentCombo,
-                currentCount + i
-            );
+    // Generar combinaciones estratégicas
+    const baseCombos = [];
+    for (let g = 0; g <= Math.min(diceGroups.guaranteed.length, 6); g++) {
+        for (let t = 0; t <= diceGroups.tripleMakers.length; t++) {
+            const neededWildcards = 6 - g - t;
+            if (neededWildcards >= 0 && neededWildcards <= diceGroups.wildcards.length) {
+                baseCombos.push([
+                    ...diceGroups.guaranteed.slice(0, g),
+                    ...diceGroups.tripleMakers.slice(0, t),
+                    ...diceGroups.wildcards.slice(0, neededWildcards)
+                ]);
+            }
         }
     }
-
-    generate(0, [], 0);
-    return combinations.filter(c => c.length <= maxSize && c.length > 0);
+    return baseCombos.filter(c => c.length === 6);
 }
 
 const workerCode = `
-const calculateScore = ${calculateScore.toString()};
 const diceDB = ${JSON.stringify(diceDB)};
+
+const calculateScore = ${calculateScore.toString()};
+
+const rollDie = (dieName) => {
+    const die = diceDB[dieName];
+    const maxIndex = die.indexOf(100);
+    if (maxIndex !== -1) return maxIndex + 1;
+    
+    let rand = Math.random() * 100;
+    let accum = 0;
+    for (let f = 0; f < 6; f++) {
+        accum += die[f];
+        if (rand <= accum) return f + 1;
+    }
+    return 6;
+};
 
 self.onmessage = (e) => {
     const [combinations, simulations] = e.data;
     const results = [];
     
-    for(const combo of combinations) {
+    for (const combo of combinations) {
         let totalScore = 0;
-        const dice = combo.map(name => diceDB[name]);
-        
-        for(let i = 0; i < simulations; i++) {
-            const roll = dice.map(die => {
-                let rand = Math.random() * 100;
-                let accum = 0;
-                for(let f = 0; f < 6; f++) {
-                    accum += die[f];
-                    if(rand <= accum) return f + 1;
-                }
-                return 6;
-            });
+        for (let i = 0; i < simulations; i++) {
+            const roll = combo.map(rollDie);
             totalScore += calculateScore(roll);
         }
-        
         results.push({
             combination: combo,
             score: totalScore / simulations
@@ -126,7 +127,7 @@ function startSimulation() {
         resultsDiv.innerHTML = `<h3>${translations.simulation_failed}</h3>`;
     };
 
-    // Dividir en chunks de 10 combinaciones
+    // Procesar en chunks para mejor rendimiento
     const chunkSize = 10;
     for (let i = 0; i < combinations.length; i += chunkSize) {
         const chunk = combinations.slice(i, i + chunkSize);
@@ -146,7 +147,7 @@ function displayResults(results) {
             </div>
             <div class="result-dice">
                 ${r.combination.map(die => `
-                    <div class="die-container">
+                    <div class="die-container" data-tooltip="${die}: ${diceDB[die].map((p, idx) => `${idx + 1}=${p}%`).join(' ')}">
                         <img src="${diceImages[die]}" 
                              class="die-icon" 
                              alt="${die}" 
@@ -155,15 +156,32 @@ function displayResults(results) {
                     </div>
                 `).join('')}
             </div>
+            <div class="result-breakdown">
+                ${getScoreBreakdown(r.combination)}
+            </div>
         </div>
     `).join('')}
     `;
 }
 
-// Nuevas funciones para manejar traducciones dinámicas
+function getScoreBreakdown(combo) {
+    const guaranteedRolls = combo.filter(d => diceDB[d].includes(100)).length;
+    const potentialTriples = combo.filter(d => diceDB[d][2] >= 30).length;
+    
+    let strategy = '';
+    if (guaranteedRolls >= 3) {
+        strategy = `Garantiza ${guaranteedRolls}x3 + ${potentialTriples} dados con alta probabilidad de triples`;
+    } else if (potentialTriples >= 4) {
+        strategy = "Estrategia de múltiples triples";
+    } else {
+        strategy = "Combinación balanceada (triples/escaleras)";
+    }
+    
+    return `${strategy} | Dados especiales: ${guaranteedRolls} garantizados, ${potentialTriples} potenciadores`;
+}
+
 function updateTranslations() {
     document.getElementById('presetName').placeholder = translations.preset_name_placeholder;
 }
 
-// Inicializar traducciones al cargar
 document.addEventListener('DOMContentLoaded', updateTranslations);

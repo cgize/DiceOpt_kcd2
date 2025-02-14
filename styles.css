@@ -422,3 +422,49 @@ button:active {
         padding: 14px;
     }
 }
+
+[data-tooltip] {
+    position: relative;
+    cursor: help;
+}
+
+[data-tooltip]:hover::before {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--primary-color);
+    color: var(--text-primary);
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    white-space: pre-wrap;
+    min-width: 180px;
+    text-align: center;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    z-index: 1000;
+    pointer-events: none;
+}
+
+.result-breakdown {
+    margin-top: 12px;
+    padding: 10px;
+    background: #112240;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    color: var(--accent-color);
+    border: 1px dashed var(--border-color);
+}
+
+.die-container[data-tooltip]:hover::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 5px;
+    border-style: solid;
+    border-color: var(--primary-color) transparent transparent transparent;
+}
