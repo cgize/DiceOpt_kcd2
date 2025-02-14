@@ -6,7 +6,7 @@ const calculateScore = (roll) => {
     let score = 0;
     const baseScores = [1000, 200, 300, 400, 500, 600];
 
-    // Triples corregidos: 2^(count-3)
+    // Cálculo de triples
     counts.forEach((count, i) => {
         if (count >= 3) score += baseScores[i] * Math.pow(2, count - 3);
     });
@@ -26,7 +26,7 @@ const calculateScore = (roll) => {
     return score;
 };
 
-function getUniqueCombinations(selectedDice, maxSize = 6) {
+function getUniqueCombinations(selectedDice) {
     const normalized = selectedDice.length >= 6 
         ? selectedDice.slice(0, 6) 
         : [...selectedDice, ...Array(6 - selectedDice.length).fill('Normal Die')];
@@ -51,16 +51,17 @@ function getUniqueCombinations(selectedDice, maxSize = 6) {
             
             if (currentCount < diceCounts[die]) {
                 current.push(die);
-                backtrack(current, i);  // Mantener el índice para evitar permutaciones
+                backtrack(current, i);
                 current.pop();
             }
         }
     };
 
     backtrack([], 0);
-    return combinations.filter(c => c.length === 6);
+    return combinations;
 }
 
+// Worker optimizado
 const workerCode = `
 const diceDB = ${JSON.stringify(diceDB)};
 const calculateScore = ${calculateScore.toString()};
@@ -68,10 +69,10 @@ const calculateScore = ${calculateScore.toString()};
 const simulateRoll = (combo) => {
     return combo.map(die => {
         const probs = diceDB[die];
-        const guaranteed = probs.indexOf(100);
-        if (guaranteed > -1) return guaranteed + 1;
+        const guaranteedFace = probs.findIndex(p => p === 100);
+        if (guaranteedFace !== -1) return guaranteedFace + 1;
         
-        const rand = Math.random() * 100;
+        let rand = Math.random() * 100;
         let accum = 0;
         for (let f = 0; f < 6; f++) {
             accum += probs[f];
@@ -86,28 +87,26 @@ self.onmessage = (e) => {
     const results = [];
     
     for (const combo of combinations) {
-        let total = 0;
-        const batchSize = 500;
-        const batches = Math.ceil(sims / batchSize);
+        let totalScore = 0;
         
-        for (let b = 0; b < batches; b++) {
+        // Procesamiento por lotes para mejor rendimiento
+        const batchSize = 500;
+        for (let i = 0; i < sims; i += batchSize) {
+            const iterations = Math.min(batchSize, sims - i);
             let batchTotal = 0;
-            const remaining = sims - (b * batchSize);
-            const iterations = Math.min(batchSize, remaining);
             
-            for (let i = 0; i < iterations; i++) {
+            for (let j = 0; j < iterations; j++) {
                 batchTotal += calculateScore(simulateRoll(combo));
             }
-            total += batchTotal;
+            totalScore += batchTotal;
         }
         
         results.push({
             combination: combo,
-            score: total / sims,
+            score: totalScore / sims,
             strategy: {
                 guaranteed: combo.filter(d => diceDB[d].some(p => p === 100)).length,
-                triples: combo.filter(d => diceDB[d][2] >= 30).length,
-                wildcards: combo.filter(d => !diceDB[d].some(p => p === 100) && diceDB[d][2] < 30).length
+                triples: combo.filter(d => diceDB[d][2] >= 30).length
             }
         });
     }
@@ -128,49 +127,56 @@ function startSimulation() {
         return;
     }
 
-    if (currentSimulation) {
-        worker.terminate();
-        currentSimulation = null;
-    }
-
+    // Resetear simulación anterior
+    if (currentSimulation) worker.terminate();
+    
     const combinations = getUniqueCombinations(selectedDice);
     const progress = document.getElementById('progress');
     const resultsDiv = document.getElementById('results');
 
+    // Inicializar estado
     resultsDiv.innerHTML = `<h3>${translations.calculating}</h3>`;
     progress.style.width = '0%';
     finalResults = [];
     currentSimulation = Date.now();
 
+    // Configurar handlers
     worker.onmessage = (e) => {
         if (currentSimulation === null) return;
 
-        const chunkResults = e.data;
-        finalResults = [...finalResults, ...chunkResults];
+        finalResults = [...finalResults, ...e.data];
+        const totalCombinations = combinations.length;
+        
+        // Actualizar progreso
+        progress.style.width = `${Math.min(100, (finalResults.length / totalCombinations) * 100)}%`;
 
-        const processed = finalResults.length;
-        const total = combinations.length;
-        progress.style.width = `${Math.min(100, (processed / total) * 100)}%`;
-
-        if (processed >= total) {
-            const sorted = finalResults.sort((a, b) => b.score - a.score);
+        // Mostrar resultados finales
+        if (finalResults.length >= totalCombinations) {
+            const sorted = finalResults.sort((a, b) => {
+                // Orden principal por puntuación
+                if (b.score !== a.score) return b.score - a.score;
+                // Orden secundario por triples garantizados
+                return b.strategy.guaranteed - a.strategy.guaranteed;
+            });
+            
             displayResults(sorted.slice(0, 5));
             currentSimulation = null;
         }
     };
 
     worker.onerror = (e) => {
-        console.error('Worker error:', e);
+        console.error('Error en worker:', e);
         alert(translations.simulation_error);
         progress.style.width = '0%';
         resultsDiv.innerHTML = `<h3>${translations.simulation_failed}</h3>`;
         currentSimulation = null;
     };
 
-    const chunkSize = 15;
-    for (let i = 0; i < combinations.length; i += chunkSize) {
-        const chunk = combinations.slice(i, i + chunkSize);
-        worker.postMessage([chunk, 1500]);
+    // Dividir en chunks y procesar
+    const CHUNK_SIZE = 25; // Optimizado para balancear rendimiento/responsividad
+    for (let i = 0; i < combinations.length; i += CHUNK_SIZE) {
+        const chunk = combinations.slice(i, i + CHUNK_SIZE);
+        worker.postMessage([chunk, 1000]); // 1000 simulaciones por combinación
     }
 }
 
@@ -182,64 +188,47 @@ function displayResults(results) {
             <div class="no-results">
                 <h3>${translations.no_combinations}</h3>
                 <p>${translations.try_adding_special_dice}</p>
-            </div>
-        `;
+            </div>`;
         return;
     }
 
     resultsDiv.innerHTML = `
         <h3>${translations.top_combinations}</h3>
-        ${results.map((r, i) => `
+        ${results.map((result, index) => `
             <div class="result-item">
                 <div class="result-header">
-                    <span class="result-rank">#${i + 1}</span>
-                    <span class="result-score">${r.score.toFixed(1)} ${translations.points}</span>
+                    <span class="result-rank">#${index + 1}</span>
+                    <span class="result-score">${result.score.toFixed(1)} ${translations.points}</span>
                 </div>
                 
                 <div class="dice-composition">
-                    ${r.combination.map(die => `
-                        <div class="die-group" data-tooltip="${die}: ${diceDB[die].map((p, idx) => `${idx + 1}=${p.toFixed(1)}%`).join(' ')}">
+                    ${result.combination.map(die => `
+                        <div class="die-group" data-tooltip="${die}: ${diceDB[die].map((p, i) => `${i+1}=${p.toFixed(1)}%`).join(' ')}">
                             <img src="${diceImages[die]}" class="die-icon" alt="${die}">
-                            <span class="die-count">${r.combination.filter(d => d === die).length}</span>
+                            <span class="die-count">${result.combination.filter(d => d === die).length}</span>
                         </div>
                     `).join('')}
                 </div>
                 
                 <div class="strategy-analysis">
-                    ${r.strategy.guaranteed > 0 ? `
+                    ${result.strategy.guaranteed > 0 ? `
                         <div class="strategy-badge guaranteed">
-                            <span class="badge-count">${r.strategy.guaranteed}</span>
-                            <span>${translations.guaranteed_triples}</span>
-                        </div>
-                    ` : ''}
+                            <span>${result.strategy.guaranteed}x</span>
+                            ${translations.guaranteed_triples}
+                        </div>` : ''}
                     
-                    ${r.strategy.triples > 0 ? `
+                    ${result.strategy.triples > 0 ? `
                         <div class="strategy-badge triple-boost">
-                            <span class="badge-count">${r.strategy.triples}</span>
-                            <span>${translations.triple_boosters}</span>
-                        </div>
-                    ` : ''}
-                    
-                    ${r.strategy.wildcards > 0 ? `
-                        <div class="strategy-badge wildcard">
-                            <span class="badge-count">${r.strategy.wildcards}</span>
-                            <span>${translations.wildcards}</span>
-                        </div>
-                    ` : ''}
+                            <span>${result.strategy.triples}x</span>
+                            ${translations.triple_boosters}
+                        </div>` : ''}
                 </div>
             </div>
-        `).join('')}
-    `;
+        `).join('')}`;
 }
 
-function updateTranslations() {
-    const presetNameInput = document.getElementById('presetName');
-    if (presetNameInput) {
-        presetNameInput.placeholder = translations.preset_name_placeholder;
-    }
-}
-
+// Inicialización final
 document.addEventListener('DOMContentLoaded', () => {
-    updateTranslations();
+    if (typeof updateTranslations === 'function') updateTranslations();
     if (typeof populateDiceOptions === 'function') populateDiceOptions();
 });
