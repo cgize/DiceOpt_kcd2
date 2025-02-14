@@ -148,3 +148,47 @@ function updateDicePool() {
 //     const total = probs.reduce((a, b) => a + b, 0);
 //     if(Math.abs(total - 100) > 0.15) console.warn(`${name}: ${total.toFixed(2)}%`);
 // });
+
+// Presets System
+const presetsKey = 'dicePresets';
+let presets = JSON.parse(localStorage.getItem(presetsKey)) || {};
+
+function savePreset(presetName) {
+    if (selectedDice.length === 0) return alert(translations.no_dice_to_save);
+    
+    presets[presetName] = selectedDice.slice();
+    localStorage.setItem(presetsKey, JSON.stringify(presets));
+    updatePresetSelector();
+    alert(translations.preset_saved);
+}
+
+function loadPreset(presetName) {
+    if (presets[presetName]) {
+        selectedDice = presets[presetName].slice();
+        updateDicePool();
+        updateFillButton();
+    }
+}
+
+function deletePreset(presetName) {
+    if (confirm(translations.confirm_delete + ` "${presetName}"?`)) {
+        delete presets[presetName];
+        localStorage.setItem(presetsKey, JSON.stringify(presets));
+        updatePresetSelector();
+    }
+}
+
+function updatePresetSelector() {
+    const presetSelect = document.getElementById('presetSelect');
+    presetSelect.innerHTML = '<option value="">' + translations.select_preset + '</option>';
+    
+    Object.keys(presets).forEach(name => {
+        const option = document.createElement('option');
+        option.value = name;
+        option.textContent = name;
+        presetSelect.appendChild(option);
+    });
+}
+
+// Initialize presets on load
+updatePresetSelector();

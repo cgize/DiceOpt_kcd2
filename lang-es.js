@@ -24,5 +24,12 @@ const translations = {
       "Elimina dados no deseados con el botón ×",
       "Cuando tengas 6 dados o más, haz clic en 'Calcular Combinaciones'",
       "Espera los resultados ordenados por mejor puntuación"
-    ]
+    ],
+    "save_preset": "Guardar Preset",
+    "load_preset": "Cargar Preset",
+    "delete_preset": "Eliminar Preset",
+    "select_preset": "Seleccionar Preset",
+    "preset_saved": "¡Preset guardado exitosamente!",
+    "no_dice_to_save": "¡No hay dados para guardar!",
+    "confirm_delete": "¿Eliminar preset",
   };

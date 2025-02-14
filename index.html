@@ -20,6 +20,15 @@
     <div class="main-content">
         <div class="section">
             <h2 data-i18n="simulation">Simulation</h2>
+            
+            <div class="preset-controls">
+                <select id="presetSelect"></select>
+                <input type="text" id="presetName" placeholder="Preset name">
+                <button onclick="savePreset(document.getElementById('presetName').value)" data-i18n="save_preset">Save</button>
+                <button onclick="loadPreset(presetSelect.value)" data-i18n="load_preset">Load</button>
+                <button onclick="deletePreset(presetSelect.value)" data-i18n="delete_preset">Delete</button>
+            </div>
+
             <select id="dieSelect"></select>
             <button onclick="addDie()" data-i18n="add_die">Add Die</button>
             <button onclick="clearDice()" data-i18n="clear">Clear</button>

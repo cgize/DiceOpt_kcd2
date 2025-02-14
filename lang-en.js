@@ -24,5 +24,12 @@ const translations = {
       "Remove unwanted dice with × button",
       "When you have 6 dice or more, click 'Calculate Combinations'",
       "Wait for results sorted by highest score"
-    ]
+    ],
+    "save_preset": "Save Preset",
+    "load_preset": "Load Preset",
+    "delete_preset": "Delete Preset",
+    "select_preset": "Select Preset",
+    "preset_saved": "Preset saved successfully!",
+    "no_dice_to_save": "No dice to save!",
+    "confirm_delete": "Delete preset",
   };
