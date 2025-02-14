@@ -29,9 +29,9 @@ const calculateScore = (roll) => {
 function getUniqueCombinations(dice, maxSize) {
     // Agrupar dados por tipo especial
     const diceGroups = {
-        guaranteed: dice.filter(d => diceDB[d].some(p => p === 100)),
-        tripleMakers: dice.filter(d => diceDB[d][2] >= 30),
-        wildcards: dice.filter(d => !diceDB[d].some(p => p === 100) && diceDB[d][2] < 30)
+        guaranteed: [...new Set(dice)].filter(d => diceDB[d].some(p => p === 100)),
+        tripleMakers: [...new Set(dice)].filter(d => diceDB[d][2] >= 30),
+        wildcards: [...new Set(dice)].filter(d => !diceDB[d].some(p => p === 100) && diceDB[d][2] < 30)
     };
 
     // Generar combinaciones estratégicas
@@ -48,12 +48,11 @@ function getUniqueCombinations(dice, maxSize) {
             }
         }
     }
-    return baseCombos.filter(c => c.length === 6);
+    return baseCombos.filter(c => c.length === 6 && c.every(die => dice.includes(die)));
 }
 
 const workerCode = `
 const diceDB = ${JSON.stringify(diceDB)};
-
 const calculateScore = ${calculateScore.toString()};
 
 const rollDie = (dieName) => {
@@ -76,13 +75,20 @@ self.onmessage = (e) => {
     
     for (const combo of combinations) {
         let totalScore = 0;
+        const composition = {
+            guaranteed: combo.filter(d => diceDB[d].some(p => p === 100)).length,
+            triples: combo.filter(d => diceDB[d][2] >= 30).length
+        };
+        
         for (let i = 0; i < simulations; i++) {
             const roll = combo.map(rollDie);
             totalScore += calculateScore(roll);
         }
+        
         results.push({
             combination: combo,
-            score: totalScore / simulations
+            score: totalScore / simulations,
+            composition: composition
         });
     }
     
@@ -127,11 +133,10 @@ function startSimulation() {
         resultsDiv.innerHTML = `<h3>${translations.simulation_failed}</h3>`;
     };
 
-    // Procesar en chunks para mejor rendimiento
     const chunkSize = 10;
     for (let i = 0; i < combinations.length; i += chunkSize) {
         const chunk = combinations.slice(i, i + chunkSize);
-        worker.postMessage([chunk, 1000]); // 1000 simulaciones por chunk
+        worker.postMessage([chunk, 1000]);
     }
 }
 
@@ -147,7 +152,7 @@ function displayResults(results) {
             </div>
             <div class="result-dice">
                 ${r.combination.map(die => `
-                    <div class="die-container" data-tooltip="${die}: ${diceDB[die].map((p, idx) => `${idx + 1}=${p}%`).join(' ')}">
+                    <div class="die-container" data-tooltip="${die}: ${diceDB[die].map((p, idx) => `${idx + 1}=${p.toFixed(1)}%`).join(' ')}">
                         <img src="${diceImages[die]}" 
                              class="die-icon" 
                              alt="${die}" 
@@ -165,23 +170,28 @@ function displayResults(results) {
 }
 
 function getScoreBreakdown(combo) {
-    const guaranteedRolls = combo.filter(d => diceDB[d].includes(100)).length;
-    const potentialTriples = combo.filter(d => diceDB[d][2] >= 30).length;
+    const guaranteed = combo.filter(d => diceDB[d].some(p => p === 100)).length;
+    const triples = combo.filter(d => diceDB[d][2] >= 30).length;
     
     let strategy = '';
-    if (guaranteedRolls >= 3) {
-        strategy = `Garantiza ${guaranteedRolls}x3 + ${potentialTriples} dados con alta probabilidad de triples`;
-    } else if (potentialTriples >= 4) {
-        strategy = "Estrategia de múltiples triples";
-    } else {
-        strategy = "Combinación balanceada (triples/escaleras)";
+    if (guaranteed > 0) {
+        strategy += `${guaranteed}x3 garantizados `;
+    }
+    if (triples > 0) {
+        strategy += `${triples} dados potenciadores de triples`;
+    }
+    if (!strategy) {
+        strategy = "Combinación balanceada (singles/escaleras)";
     }
     
-    return `${strategy} | Dados especiales: ${guaranteedRolls} garantizados, ${potentialTriples} potenciadores`;
+    return `Estrategia: ${strategy} | Dados especiales: ${guaranteed + triples}/6`;
 }
 
 function updateTranslations() {
     document.getElementById('presetName').placeholder = translations.preset_name_placeholder;
 }
 
-document.addEventListener('DOMContentLoaded', updateTranslations);
+document.addEventListener('DOMContentLoaded', () => {
+    updateTranslations();
+    if (typeof populateDiceOptions === 'function') populateDiceOptions();
+});
