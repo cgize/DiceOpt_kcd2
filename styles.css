@@ -23,6 +23,7 @@ body {
 .sidebar { 
     padding-right: 20px; 
     border-right: 2px solid var(--border-color);
+    background: var(--primary-color);
     position: sticky;
     top: 20px;
     height: fit-content;
@@ -275,13 +276,8 @@ h1, h2, h3 {
 }
 
 h1 {
-    position: sticky;
-    top: 0;
-    background-color: var(--primary-color);
-    z-index: 10;
-    padding: 15px 20px; 
-    margin: 0;
-    border-bottom: 2px solid var(--border-color); 
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 0.5em;
     font-size: 2rem;
 }
 
