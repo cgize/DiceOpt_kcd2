@@ -8,6 +8,7 @@
     --border-color: #233554;
 }
 
+/* ========== Diseño principal ========== */
 body { 
     font-family: 'Segoe UI', system-ui, sans-serif;
     padding: 20px; 
@@ -34,7 +35,7 @@ body {
     min-width: 0;
 }
 
-/* ======= Mejoras en la barra de progreso ======= */
+/* ========== Barra de progreso ========== */
 .progress-bar {
     width: 100%;
     height: 30px;
@@ -42,7 +43,6 @@ body {
     border-radius: 15px;
     overflow: hidden;
     margin: 15px 0;
-    position: relative;
 }
 
 .progress-fill {
@@ -50,10 +50,250 @@ body {
     background: linear-gradient(to right, var(--accent-color), #52D1A4);
     transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
-    min-width: 5px;
 }
 
-/* ======= Estilos faltantes para nuevos componentes ======= */
+/* ========== Resultados ========== */
+#results { 
+    margin-top: 20px;
+}
+
+.result-item {
+    margin: 15px 0;
+    padding: 20px;
+    background: var(--primary-color);
+    border-radius: 12px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.3);
+    transition: transform 0.2s;
+    border: 1px solid var(--border-color);
+}
+
+.result-item:hover {
+    transform: translateY(-2px);
+}
+
+.result-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.result-rank {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: var(--accent-color);
+}
+
+.result-score {
+    font-size: 1.3rem;
+    color: #52D1A4;
+    font-weight: 600;
+}
+
+/* ========== Detalles de dados ========== */
+.die-details {
+    position: relative;
+    padding: 12px;
+    margin: 8px 0;
+    background: #112240;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    border: 1px solid var(--border-color);
+}
+
+.die-table {
+    margin: 5px 0;
+    border-spacing: 0;
+    width: 100%;
+    table-layout: fixed;
+    overflow-x: auto;
+    display: block;
+}
+
+.die-table th, .die-table td {
+    padding: 6px;
+    font-size: 0.75em;
+    border-right: 1px solid var(--border-color);
+    text-align: center;
+}
+
+.die-table th {
+    background: #1B2A4E;
+    font-weight: 600;
+    color: var(--accent-color);
+    letter-spacing: 0.5px;
+}
+
+.die-table td {
+    background: #0F1D38;
+    color: var(--text-secondary);
+}
+
+/* ========== Elementos interactivos ========== */
+button {
+    padding: 12px 24px;
+    background: var(--accent-color);
+    color: var(--primary-dark);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.95rem;
+}
+
+button:hover {
+    background: #52D1A4;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(100, 255, 218, 0.2);
+}
+
+button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+button:active {
+    transform: translateY(1px);
+}
+
+/* ========== Selectores y formularios ========== */
+#dieSelect {
+    padding: 12px 35px 12px 15px;
+    margin: 5px;
+    background: var(--primary-color);
+    border: 2px solid var(--border-color);
+    border-radius: 6px;
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2364FFDA'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 12px;
+}
+
+#dieSelect:hover {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 8px rgba(100, 255, 218, 0.2);
+}
+
+#dieSelect:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 12px rgba(100, 255, 218, 0.3);
+}
+
+#dieSelect option {
+    background: var(--primary-dark);
+    color: var(--text-primary);
+    padding: 12px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* ========== Presets ========== */
+.preset-controls {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 15px;
+    align-items: center;
+}
+
+#presetName {
+    padding: 12px;
+    background: var(--primary-color);
+    border: 2px solid var(--border-color);
+    border-radius: 6px;
+    color: var(--text-primary);
+    flex: 1;
+    min-width: 150px;
+}
+
+#presetSelect {
+    padding: 12px 35px 12px 15px;
+    background: var(--primary-color);
+    border: 2px solid var(--border-color);
+    border-radius: 6px;
+    color: var(--text-primary);
+    max-width: 200px;
+}
+
+/* ========== Búsqueda ========== */
+.search-input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    background: var(--primary-color);
+    border: 2px solid var(--border-color);
+    border-radius: 6px;
+    color: var(--text-primary);
+    font-size: 0.95rem;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 12px rgba(100, 255, 218, 0.3);
+}
+
+/* ========== Elementos de dados ========== */
+.die-icon {
+    width: 55px;
+    height: 55px;
+    object-fit: contain;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    padding: 3px;
+    background: var(--primary-color);
+    transition: transform 0.3s ease;
+}
+
+.die-icon:hover {
+    transform: rotate(15deg) scale(1.1);
+    filter: drop-shadow(0 0 8px rgba(100, 255, 218, 0.3));
+}
+
+.die-icon-small {
+    width: 45px;
+    height: 45px;
+    margin-right: 10px;
+    vertical-align: middle;
+    object-fit: contain;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    padding: 2px;
+    background: var(--primary-color);
+    transition: transform 0.2s ease;
+}
+
+.die-icon-small:hover {
+    transform: scale(1.05);
+}
+
+.remove-btn {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    width: 25px;
+    height: 25px;
+    background: #FF4D4D;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 6px rgba(255, 77, 77, 0.3);
+    z-index: 1;
+}
+
+/* ========== Componentes nuevos del simulador ========== */
 .die-group {
     position: relative;
     display: inline-flex;
@@ -74,6 +314,13 @@ body {
     z-index: 2;
 }
 
+.strategy-analysis {
+    margin-top: 15px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
 .strategy-badge {
     display: inline-flex;
     align-items: center;
@@ -82,21 +329,18 @@ body {
     border-radius: 20px;
     font-size: 0.85rem;
     gap: 6px;
-}
-
-.guaranteed {
     background: rgba(100, 255, 218, 0.15);
     border: 1px solid var(--accent-color);
 }
 
 .triple-boost {
     background: rgba(255, 215, 0, 0.15);
-    border: 1px solid #FFD700;
+    border-color: #FFD700;
 }
 
 .wildcard {
     background: rgba(33, 150, 243, 0.15);
-    border: 1px solid #2196F3;
+    border-color: #2196F3;
 }
 
 .no-results {
@@ -108,76 +352,94 @@ body {
     margin: 20px 0;
 }
 
-/* ======= Mejoras en tooltips ======= */
+/* ========== Tooltips ========== */
+[data-tooltip] {
+    position: relative;
+    cursor: help;
+}
+
 [data-tooltip]:hover::before {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--primary-color);
+    color: var(--text-primary);
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    white-space: pre-wrap;
+    min-width: 180px;
+    text-align: center;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
     z-index: 10000;
     pointer-events: none;
-    white-space: pre;
-    max-width: 300px;
     backdrop-filter: blur(5px);
 }
 
-/* ======= Correcciones responsivas ======= */
+/* ========== Responsive ========== */
 @media (max-width: 768px) {
-    .result-item {
-        margin: 10px 0;
+    body {
+        grid-template-columns: 1fr;
         padding: 15px;
+        gap: 15px;
+    }
+    
+    .sidebar, .main-content {
+        padding: 0;
+        border: none;
+    }
+    
+    .die-icon {
+        width: 70px;
+        height: 70px;
+    }
+    
+    .die-icon-small {
+        width: 50px;
+        height: 50px;
     }
     
     .strategy-badge {
         font-size: 0.75rem;
-        padding: 4px 8px;
     }
 }
 
 @media (max-width: 480px) {
-    .die-group {
-        margin: 3px;
+    h1 {
+        font-size: 1.8rem;
     }
     
     .die-count {
         font-size: 0.7rem;
-        padding: 1px 4px;
+    }
+    
+    #presetSelect {
+        max-width: none;
+        width: 100%;
     }
 }
 
-/* ======= Corrección de overflow en tablas ======= */
-.die-table {
-    overflow-x: auto;
-    display: block;
+/* ========== Tipografía ========== */
+h1, h2, h3 {
+    color: var(--text-primary);
+    font-weight: 500;
 }
 
-/* ======= Mejoras en botones ======= */
-button:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
+h1 {
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 0.5em;
+    font-size: 2rem;
 }
 
-/* ======= Ajustes de z-index ======= */
-.remove-btn {
-    z-index: 1;
+h2 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
 }
 
-/* ======= Estilos faltantes para imágenes ======= */
-.die-icon-small {
-    transition: transform 0.2s ease;
-}
-
-.die-icon-small:hover {
-    transform: scale(1.05);
-}
-
-/* ======= Añadido para scroll suave ======= */
-html {
-    scroll-behavior: smooth;
-}
-
-/* ======= Corrección de alineación en presets ======= */
-.preset-controls {
-    align-items: center;
-}
-
-/* ======= Mejoras en bordes ======= */
-.result-item {
-    border: 1px solid rgba(100, 255, 218, 0.1);
+h3 {
+    font-size: 1.3rem;
+    margin: 15px 0;
 }
