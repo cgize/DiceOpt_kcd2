@@ -275,8 +275,13 @@ h1, h2, h3 {
 }
 
 h1 {
-    border-bottom: 2px solid var(--border-color);
-    padding-bottom: 0.5em;
+    position: sticky;
+    top: 0;
+    background-color: var(--primary-dark);
+    z-index: 10;
+    padding: 15px 20px; 
+    margin: 0;
+    border-bottom: 2px solid var(--border-color); 
     font-size: 2rem;
 }
 
