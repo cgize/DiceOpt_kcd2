@@ -21,12 +21,12 @@
         <div class="section">
             <h2 data-i18n="simulation">Simulation</h2>
             
-            <div class="preset-controls">
-                <select id="presetSelect"></select>
-                <input type="text" id="presetName" placeholder="Preset name">
-                <button onclick="savePreset(document.getElementById('presetName').value)" data-i18n="save_preset">Save</button>
-                <button onclick="loadPreset(presetSelect.value)" data-i18n="load_preset">Load</button>
-                <button onclick="deletePreset(presetSelect.value)" data-i18n="delete_preset">Delete</button>
+            <div class="preset-controls compact-presets">
+                <select id="presetSelect" class="compact-select"></select>
+                <input type="text" id="presetName" placeholder="🔤" class="compact-input">
+                <button onclick="savePreset(document.getElementById('presetName').value)" title="Save Preset">💾</button>
+                <button onclick="loadPreset(presetSelect.value)" title="Load Preset">📂</button>
+                <button onclick="deletePreset(presetSelect.value)" title="Delete Preset">🗑️</button>
             </div>
 
             <select id="dieSelect"></select>

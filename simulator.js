@@ -186,17 +186,16 @@ const displayResults = (results) => {
     resultsDiv.innerHTML = `
         <h3>${translations.top_combinations}</h3>
         ${results.map((result, index) => `
-            <div class="result-item">
+            <div class="result-item compact">
                 <div class="result-header">
                     <span class="result-rank">#${index + 1}</span>
-                    <span class="result-score">${result.score.toFixed(1)} ${translations.points}</span>
+                    <span class="result-score">${result.score.toFixed(1)}${translations.points}</span>
                 </div>
-                
                 <div class="dice-composition">
                     ${Object.entries(result.composition).map(([die, count]) => `
                         <div class="die-group" 
                              data-tooltip="${die}: ${diceDB[die].map((p, i) => `${i+1}=${p.toFixed(1)}%`).join(' ')}">
-                            <img src="${diceImages[die]}" class="die-icon" alt="${die}">
+                            <img src="${diceImages[die]}" class="die-icon-compact" alt="${die}">
                             <span class="die-count">${count}</span>
                         </div>
                     `).join('')}

@@ -443,3 +443,150 @@ h3 {
     font-size: 1.3rem;
     margin: 15px 0;
 }
+
+.die-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 5px;
+}
+
+.die-name {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    text-align: center;
+    max-width: 80px;
+    margin-top: 5px;
+    line-height: 1.2;
+    word-break: break-word;
+}
+
+.die-group {
+    position: relative;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 10px;
+}
+
+.die-count {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: var(--accent-color);
+    color: var(--primary-dark);
+    padding: 2px 6px;
+    border-radius: 10px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    z-index: 2;
+}
+
+.result-item.compact {
+    padding: 12px;
+    margin: 10px 0;
+}
+
+.compact-composition {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.die-compact-group {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 2px;
+    width: 60px;
+}
+
+.die-icon-small {
+    width: 40px;
+    height: 40px;
+    margin: 0;
+}
+
+.die-name {
+    font-size: 0.6rem;
+    color: var(--text-secondary);
+    text-align: center;
+    line-height: 1.1;
+    margin-top: 2px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.compact-presets {
+    gap: 6px;
+    margin-bottom: 10px;
+}
+
+.compact-presets button {
+    padding: 8px;
+    min-width: 32px;
+    font-size: 0.9rem;
+    line-height: 1;
+}
+
+.compact-select {
+    padding: 8px 25px 8px 8px;
+    font-size: 0.85rem;
+    max-width: 140px;
+}
+
+.compact-input {
+    padding: 8px;
+    min-width: 60px;
+    flex: 0 1 100px;
+}
+
+.section {
+    padding: 12px;
+    margin-bottom: 15px;
+}
+
+h2 {
+    margin-bottom: 10px;
+    font-size: 1.3rem;
+}
+
+.result-item.compact {
+    padding: 8px 12px;
+    margin: 8px 0;
+}
+
+.dice-composition {
+    gap: 6px;
+    margin-top: 6px;
+}
+
+.die-icon-compact {
+    width: 40px;
+    height: 40px;
+    margin: 0;
+}
+
+.die-count {
+    font-size: 0.7rem;
+    padding: 1px 4px;
+    top: -6px;
+    right: -6px;
+}
+
+.result-header {
+    margin-bottom: 6px;
+}
+
+.result-rank {
+    font-size: 1.1rem;
+}
+
+.result-score {
+    font-size: 1.1rem;
+}
