@@ -97,10 +97,7 @@ function populateDiceOptions(filter = '') {
     });
 }
 
-searchInput.addEventListener('input', (e) => {
-    populateDiceOptions(e.target.value);
-});
-
+// Corrección 1: Event listener único con debounce
 let searchTimeout;
 searchInput.addEventListener('input', (e) => {
     clearTimeout(searchTimeout);
@@ -150,6 +147,7 @@ function fillWithNormalDice() {
     }
 }
 
+// Corrección 4: Atributos alt mejorados
 function updateDicePool() {
     const pool = document.getElementById('dicePool');
     pool.innerHTML = selectedDice.map((die, index) => `
@@ -158,8 +156,9 @@ function updateDicePool() {
             <div class="die-title">
                 <img src="${diceImages[die]}" 
                      class="die-icon-small" 
-                     alt="${die.replace("'s", "")}">
-                ${die.replace("'s", "")}
+                     alt="${die}" 
+                     title="${die}">
+                ${die}
             </div>
             <table class="die-table">
                 <tr class="die-header">${[1,2,3,4,5,6].map(n => `<th>${n}</th>`).join('')}</tr>
@@ -173,13 +172,14 @@ function updateDicePool() {
 const presetsKey = 'dicePresets';
 let presets = JSON.parse(localStorage.getItem(presetsKey)) || {};
 
+// Corrección 2: Usar variable 'name' validada
 function savePreset(presetName) {
     const name = presetName.trim();
     if (!name) return alert(translations.invalid_preset_name);
     if (presets[name]) return alert(translations.preset_exists);
     if (selectedDice.length === 0) return alert(translations.no_dice_to_save);
     
-    presets[presetName] = selectedDice.slice();
+    presets[name] = selectedDice.slice();  // Usar name en lugar de presetName
     localStorage.setItem(presetsKey, JSON.stringify(presets));
     updatePresetSelector();
     alert(translations.preset_saved);

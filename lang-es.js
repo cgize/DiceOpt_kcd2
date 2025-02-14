@@ -29,6 +29,6 @@ const translations = {
   "no_dice_selected": "¡Selecciona dados primero!",
   "invalid_preset_name": "¡El nombre del preset no puede estar vacío!",
   "search_dice": "Buscar dados...",
-  "simulation_error": "¡Error en la simulación!"
+  "simulation_error": "¡Error en la simulación!",
   "preset_exists": "¡El nombre del preset ya existe!"
 };
