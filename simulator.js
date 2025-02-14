@@ -6,19 +6,19 @@ const calculateScore = (roll) => {
     let score = 0;
     const baseScores = [1000, 200, 300, 400, 500, 600];
 
-    // Prioridad 1: Triples y múltiplos
+    // Triples corregidos: 2^(count-3)
     counts.forEach((count, i) => {
-        if (count >= 3) score += baseScores[i] * Math.pow(2, Math.floor(count / 3) * (count - 2);
+        if (count >= 3) score += baseScores[i] * Math.pow(2, count - 3);
     });
 
-    // Prioridad 2: Escaleras (solo si no hay triples)
+    // Escaleras
     if (score === 0) {
         if ([1, 2, 3, 4, 5].every(n => counts[n - 1] >= 1)) score += 500;
         if ([2, 3, 4, 5, 6].every(n => counts[n - 1] >= 1)) score += 750;
         if (counts.every(c => c >= 1)) score += 1500;
     }
 
-    // Prioridad 3: Singles
+    // Singles
     if (score === 0) {
         score += counts[0] * 100 + counts[4] * 50;
     }
@@ -27,9 +27,9 @@ const calculateScore = (roll) => {
 };
 
 function getUniqueCombinations(selectedDice, maxSize = 6) {
-    const normalized = selectedDice.length >= 6 ? 
-        selectedDice.slice(0, 6) : 
-        [...selectedDice, ...Array(6 - selectedDice.length).fill('Normal Die')];
+    const normalized = selectedDice.length >= 6 
+        ? selectedDice.slice(0, 6) 
+        : [...selectedDice, ...Array(6 - selectedDice.length).fill('Normal Die')];
 
     const diceCounts = normalized.reduce((acc, die) => {
         acc[die] = (acc[die] || 0) + 1;
@@ -37,26 +37,28 @@ function getUniqueCombinations(selectedDice, maxSize = 6) {
     }, {});
 
     const combinations = [];
+    const diceTypes = Object.keys(diceCounts);
     
-    const backtrack = (current, index) => {
+    const backtrack = (current, startIndex) => {
         if (current.length === 6) {
             combinations.push([...current]);
             return;
         }
         
-        const available = Object.keys(diceCounts).filter(die => 
-            current.filter(d => d === die).length < diceCounts[die]
-        );
-
-        for (const die of available.slice(index)) {
-            current.push(die);
-            backtrack(current, available.indexOf(die));
-            current.pop();
+        for (let i = startIndex; i < diceTypes.length; i++) {
+            const die = diceTypes[i];
+            const currentCount = current.filter(d => d === die).length;
+            
+            if (currentCount < diceCounts[die]) {
+                current.push(die);
+                backtrack(current, i);  // Mantener el índice para evitar permutaciones
+                current.pop();
+            }
         }
     };
 
     backtrack([], 0);
-    return combinations;
+    return combinations.filter(c => c.length === 6);
 }
 
 const workerCode = `
@@ -165,7 +167,6 @@ function startSimulation() {
         currentSimulation = null;
     };
 
-    // Enviar en chunks de 15 combinaciones
     const chunkSize = 15;
     for (let i = 0; i < combinations.length; i += chunkSize) {
         const chunk = combinations.slice(i, i + chunkSize);
@@ -231,9 +232,11 @@ function displayResults(results) {
     `;
 }
 
-// Inicialización de traducciones
 function updateTranslations() {
-    document.getElementById('presetName').placeholder = translations.preset_name_placeholder;
+    const presetNameInput = document.getElementById('presetName');
+    if (presetNameInput) {
+        presetNameInput.placeholder = translations.preset_name_placeholder;
+    }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
