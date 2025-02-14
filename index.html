@@ -73,7 +73,7 @@
             instructionContainer.innerHTML = `
                 <h3 data-i18n="instructions">${translations.instructions}</h3>
                 ${translations.instruction_steps.map((step, i) => `
-                    <div class="instruction-step">🔸${i + 1}. ${step}</div>
+                    <div class="instruction-step">${i + 1}. ${step}</div>
                 `).join('')}
             `;
 
@@ -81,7 +81,7 @@
             scoringContainer.innerHTML = `
                 <h3 data-i18n="how_we_choose">${translations.how_we_choose}</h3>
                 ${translations.simulation_steps.map(step => `
-                    <div class="scoring-rule">🔹 ${step}</div>
+                    <div class="scoring-rule">${step}</div>
                 `).join('')}
             `;
         }
