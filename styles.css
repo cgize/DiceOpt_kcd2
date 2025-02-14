@@ -277,7 +277,7 @@ h1, h2, h3 {
 h1 {
     position: sticky;
     top: 0;
-    background-color: var(--primary-dark);
+    background-color: var(--primary-color);
     z-index: 10;
     padding: 15px 20px; 
     margin: 0;
