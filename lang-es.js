@@ -30,5 +30,11 @@ const translations = {
   "invalid_preset_name": "¡El nombre del preset no puede estar vacío!",
   "search_dice": "Buscar dados...",
   "simulation_error": "¡Error en la simulación!",
-  "preset_exists": "¡El nombre del preset ya existe!"
+  "preset_exists": "¡El nombre del preset ya existe!",
+  "guaranteed_triples": "Triples garantizados",
+  "triple_boosters": "Potenciadores de triples",
+  "wildcards": "Comodines",
+  "no_combinations": "¡No se encontraron combinaciones!",
+  "try_adding_special_dice": "Prueba añadiendo dados especiales",
+  "preset_name_placeholder": "Nombre del preset"
 };
