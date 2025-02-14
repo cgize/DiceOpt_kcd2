@@ -215,3 +215,7 @@ function updatePresetSelector() {
 
 // Initialize presets on load
 updatePresetSelector();
+document.addEventListener('DOMContentLoaded', () => {
+    updateTranslations();
+    updatePresetSelector();
+});

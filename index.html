@@ -50,31 +50,58 @@
         </div>
     </div>
 
-    <script src="diceData.js"></script>
+    <!-- Carga de idioma FIRST -->
     <script>
         const userLang = navigator.language || navigator.userLanguage;
         const langCode = userLang.split('-')[0];
         const lang = langCode === 'es' ? 'es' : 'en';
         document.write(`<script src="lang-${lang}.js"><\/script>`);
     </script>
+
+    <!-- Resto de scripts -->
+    <script src="diceData.js"></script>
     <script src="simulator.js"></script>
+
     <script>
+        // Aplicar traducciones después de cargar todo
         function applyTranslations() {
+            // Traducir elementos estáticos
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
                 if (translations[key]) {
-                    el.textContent = translations[key];
+                    if (el.tagName === 'INPUT') {
+                        el.placeholder = translations[key];
+                    } else {
+                        el.textContent = translations[key];
+                    }
                 }
             });
+
+            // Traducir sección dinámica
             const scoringContainer = document.querySelector('.scoring-rules');
-            scoringContainer.innerHTML = `
-                <h3 data-i18n="how_we_choose">${translations.how_we_choose}</h3>
-                ${translations.simulation_steps.map(step => `
-                    <div class="scoring-rule">${step}</div>
-                `).join('')}
-            `;
+            if (scoringContainer) {
+                scoringContainer.innerHTML = `
+                    <h3>${translations.how_we_choose}</h3>
+                    ${translations.simulation_steps.map(step => `
+                        <div class="scoring-rule">${step}</div>
+                    `).join('')}
+                `;
+            }
+
+            // Actualizar selector de presets
+            const presetSelect = document.getElementById('presetSelect');
+            if (presetSelect) {
+                presetSelect.innerHTML = `<option value="">${translations.select_preset}</option>`;
+            }
         }
-        window.addEventListener('DOMContentLoaded', applyTranslations);
+
+        // Inicialización completa
+        document.addEventListener('DOMContentLoaded', () => {
+            applyTranslations();
+            populateDiceOptions();
+            updatePresetSelector();
+            updateFillButton();
+        });
     </script>
 </body>
 </html>
