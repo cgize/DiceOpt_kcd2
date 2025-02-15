@@ -1,226 +1,431 @@
-/* styles.css - Versión simplificada */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 :root {
-    --primary-dark: #0A192F;
-    --primary-color: #172A45;
-    --accent-color: #64FFDA;
-    --text-primary: #CCD6F6;
-    --text-secondary: #8892B0;
-    --border-color: #233554;
+    --primary: #7289da;
+    --primary-hover: #5b73cf;
+    --background: #1a1b1e;
+    --surface: #2b2d31;
+    --surface-hover: #34363c;
+    --text: #ffffff;
+    --text-secondary: #b5bac1;
+    --danger: #ed4245;
+    --success: #3ba55c;
+    --border: #42444a;
+    --shadow: rgba(0, 0, 0, 0.2);
+    --highlight: #ff6b6b;
+    --highlight-hover: #ff5252;
 }
 
-/* Estructura principal */
 body {
-    font-family: 'Segoe UI', system-ui, sans-serif;
-    padding: 20px;
-    display: grid;
-    grid-template-columns: 35% 65%;
-    gap: 20px;
-    max-width: 1200px;
-    margin: 0 auto;
-    background: var(--primary-dark);
-    color: var(--text-primary);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background-color: var(--background);
+    color: var(--text);
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: row;
 }
 
+/* Layout */
 .sidebar {
-    padding-right: 20px;
-    border-right: 2px solid var(--border-color);
-    position: sticky;
-    top: 20px;
-    height: fit-content;
+    background-color: var(--surface);
+    width: 400px;
+    padding: 1.5rem;
+    border-right: 1px solid var(--border);
+    height: 100vh;
+    overflow-y: auto;
+    position: fixed;
 }
 
 .main-content {
-    padding-left: 20px;
-    min-width: 0;
+    flex: 1;
+    padding: 1.5rem;
+    margin-left: 400px;
+    max-width: auto;    
 }
 
-/* Resultados compactos */
-#results {
-    margin-top: 20px;
+/* Typography */
+h1 {
+    font-size: 1.75rem;
+    margin-bottom: 1.5rem;
+    color: var(--text);
 }
 
+h2 {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+    color: var(--text);
+}
+
+h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.75rem;
+    color: var(--text);
+}
+
+
+.simulation-controls {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    align-items: center;
+}
+  
+.simulation-controls select,
+.simulation-controls input.search-input,
+.simulation-controls button {
+box-sizing: border-box;
+margin: 0;
+padding: 0.5rem;
+font-size: 0.9rem;
+border-radius: 4px;
+}
+
+.simulation-controls input.search-input {
+background-color: var(--surface-hover);
+color: var(--text);
+border: 1px solid var(--border);
+width: 200px;
+}
+
+/* Buttons */
+button {
+    background-color: var(--primary);
+    color: var(--text);
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.2s;
+    white-space: nowrap;
+}
+
+button:hover {
+    background-color: var(--primary-hover);
+}
+
+button[onclick="startSimulation()"] {
+    background-color: var(--highlight);
+}
+
+button[onclick="startSimulation()"]:hover {
+    background-color: var(--highlight-hover);
+}
+
+.preset-buttons {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+  }
+  
+
+/* Select and Input */
+select, input {
+    background-color: var(--surface);
+    color: var(--text);
+    border: 1px solid var(--border);
+    padding: 0.5rem;
+    border-radius: 4px;
+    width: 100%;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+}
+
+select:focus, input:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+/* Preset Section in Sidebar */
+.preset-section {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background-color: var(--surface-hover);
+    border-radius: 8px;
+}
+
+.preset-controls {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+}
+
+.preset-actions {
+    display: flex;
+    gap: 0.25rem;
+}
+
+.preset-actions button {
+    padding: 0.25rem 0.5rem;
+    font-size: 1rem;
+}
+
+/* Dice Pool */
+.die-details {
+    background-color: var(--surface);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    position: relative;
+    border: 1px solid var(--border);
+}
+
+.die-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+    font-weight: 500;
+}
+
+.die-icon-small {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+}
+
+.die-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+}
+
+.die-table th, .die-table td {
+    padding: 0.25rem;
+    text-align: center;
+    border: 1px solid var(--border);
+}
+
+.die-table th {
+    background-color: var(--surface-hover);
+}
+
+/* Remove Button */
+.remove-btn {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background-color: transparent;
+    color: var(--danger);
+    border: none;
+    cursor: pointer;
+    padding: 0.25rem 0.5rem;
+    font-size: 1.2rem;
+}
+
+.remove-btn:hover {
+    background-color: var(--danger);
+    color: var(--text);
+}
+
+/* Results Section */
 .result-item {
-    margin: 10px 0;
-    padding: 15px;
-    background: var(--primary-color);
-    border-radius: 12px;
-    border: 1px solid var(--border-color);
-    box-shadow: 0 3px 12px rgba(0,0,0,0.3);
+    background-color: var(--surface);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border: 1px solid var(--border);
 }
 
 .result-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 12px;
+    margin-bottom: 0.75rem;
 }
 
 .result-rank {
-    font-size: 1.3rem;
     font-weight: bold;
-    color: var(--accent-color);
+    color: var(--primary);
 }
 
 .result-score {
-    font-size: 1.2rem;
-    color: #52D1A4;
-    font-weight: 600;
+    color: var(--success);
 }
 
-/* Dados en resultados */
 .dice-composition {
     display: flex;
     flex-wrap: wrap;
-    gap: 15px;
-    margin-top: 10px;
+    gap: 1rem;
 }
 
 .die-group {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 5px;
     text-align: center;
 }
 
 .die-container {
     position: relative;
-    margin-bottom: 4px;
+    display: inline-block;
 }
 
-.die-icon {
-    width: 55px;
-    height: 55px;
+.die-icon-adjusted {
+    width: 32px;
+    height: 32px;
     object-fit: contain;
-    border: 2px solid var(--border-color);
-    border-radius: 8px;
-    padding: 3px;
-    background: var(--primary-color);
-    transition: transform 0.2s ease;
 }
 
 .die-count {
     position: absolute;
-    top: -10px;
-    right: -10px;
-    background: var(--accent-color);
-    color: var(--primary-dark);
-    padding: 4px 8px;
-    border-radius: 12px;
-    font-size: 0.9rem;
-    font-weight: bold;
-    min-width: 24px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    bottom: -5px;
+    right: -5px;
+    background-color: var(--primary);
+    color: var(--text);
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    font-size: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .die-name {
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     color: var(--text-secondary);
-    max-width: 90px;
-    margin-top: 6px;
-    line-height: 1.2;
-    word-break: break-word;
+    margin-top: 0.25rem;
+    display: block;
 }
 
-/* Controles */
-button {
-    padding: 12px 24px;
-    background: var(--accent-color);
-    color: var(--primary-dark);
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: all 0.3s ease;
-}
-
-button:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(100, 255, 218, 0.2);
-}
-
-/* Presets compactos */
-.preset-controls {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    margin-bottom: 12px;
-}
-
-#presetSelect {
-    padding: 10px 30px 10px 12px;
-    max-width: 160px;
-    font-size: 0.9rem;
-}
-
-/* Barra de progreso */
 .progress-bar {
-    width: 100%;
-    height: 25px;
-    background: #112240;
-    border-radius: 15px;
-    margin: 12px 0;
+    background-color: var(--surface);
+    border-radius: 4px;
+    height: 8px;
+    margin: 1rem 0;
+    overflow: hidden;
 }
 
 .progress-fill {
+    background-color: var(--primary);
     height: 100%;
-    background: linear-gradient(to right, var(--accent-color), #52D1A4);
-    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: width 0.3s ease;
 }
 
-/* Responsive */
 @media (max-width: 768px) {
-    body {
-        grid-template-columns: 1fr;
-        padding: 15px;
-        gap: 15px;
-    }
-    
-    .sidebar, .main-content {
-        padding: 0;
-        border: none;
-    }
-    
-    .die-icon {
-        width: 50px;
-        height: 50px;
-    }
-    
-    #presetSelect {
-        max-width: none;
-        width: 100%;
-    }
-}
 
-@media (max-width: 480px) {
-    .die-name {
-        font-size: 0.65rem;
-        max-width: 70px;
+    /* El body en columna hace que la sidebar aparezca arriba
+       y la main-content debajo */
+    body {
+      flex-direction: column;
     }
-    
-    .die-count {
-        font-size: 0.8rem;
-        padding: 3px 6px;
+  
+    .sidebar {
+      width: 100%;
+      height: auto;
+      position: static; /* Permite que fluya en orden normal */
+      border-right: none;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 1rem; /* Separación con el contenido principal */
     }
-}
+  
+    .main-content {
+      margin-left: 0;
+      padding: 1rem;
+    }
+  
+    /* Si usas esta clase para un contenedor flex, añade display: flex; */
+    .controls-row {
+      display: flex;
+      flex-wrap: wrap;
+    }
+  
+    /* Si .simulation-controls debe permitir que sus hijos salten de línea en mobile */
+    .simulation-controls {
+      flex-wrap: wrap;
+    }
+  
+    /* Para las secciones de presets: reduce a una sola columna en móvil */
+    .preset-controls {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.5rem;
+    }
+  
+    /* Si .preset-actions contiene los 3 botones, aquí forzamos fila y separación */
+    .preset-actions {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: space-between;
+    }
+  
+    /* Ajusta el espacio entre dados si presentas resultados en 'dice-composition' */
+    .dice-composition {
+      gap: 0.5rem;
+    }
+  
+    /* Si cada die-group debe ser un 'item' flexible */
+    .die-group {
+      flex: 1 1 calc(33.33% - 0.5rem);
+    }
+  }
 
 /* Tooltips */
-[data-tooltip]:hover::before {
+[data-tooltip] {
+    position: relative;
+    cursor: help;
+}
+
+[data-tooltip]:hover::after {
     content: attr(data-tooltip);
     position: absolute;
     bottom: 100%;
     left: 50%;
     transform: translateX(-50%);
-    background: var(--primary-color);
-    color: var(--text-primary);
-    padding: 8px 12px;
-    border-radius: 6px;
-    font-size: 0.9rem;
-    white-space: pre-wrap;
-    min-width: 180px;
-    text-align: center;
-    border: 1px solid var(--border-color);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    background-color: var(--surface);
+    color: var(--text);
+    padding: 0.5rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    white-space: nowrap;
     z-index: 1000;
+    border: 1px solid var(--border);
+    box-shadow: 0 2px 8px var(--shadow);
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--primary);
+}
+
+/* Section Specific Adjustments */
+.section {
+    margin-bottom: 2rem;
+}
+
+#dieSelect {
+    flex: 1;
+    margin-bottom: 0;
+    width: 200px;
+}
+
+.simulation {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* Adjust the remove hint text */
+.remove-hint {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    text-align: center;
+    margin-top: -0.5rem;
+    margin-bottom: 1rem;
 }
