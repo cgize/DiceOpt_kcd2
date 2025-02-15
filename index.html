@@ -16,14 +16,12 @@
             <div class="remove-hint" data-i18n="remove_hint">Click × to remove dice</div>
         </div>
 
-        <!-- Sección de presets movida al sidebar -->
         <div class="section">
             <h2>Presets</h2>
             <div class="preset-controls">
                 <select id="presetSelect"></select>
-                <input type="text" id="presetName" placeholder="Preset Name">
                 <div class="preset-buttons">
-                    <button onclick="savePreset(document.getElementById('presetName').value)" title="Save Preset">
+                    <button onclick="savePreset()" title="Save Preset">
                         <img src="./img/bookmark.svg" alt="Save" width="24">
                     </button>
                     <button onclick="loadPreset(presetSelect.value)" title="Load Preset">
@@ -33,7 +31,6 @@
                         <img src="./img/trash.svg" alt="Delete" width="24">
                     </button>
                 </div>
-                
             </div>
         </div>
     </div>
@@ -42,8 +39,15 @@
         <div class="section">
             <h2 data-i18n="simulation">Simulation</h2>
 
+            <!-- Barra de búsqueda con icono de lupa -->
             <div class="simulation-controls">
-                <select id="dieSelect"></select>
+                <div class="dropdown-container">
+                    <div class="search-box">
+                        <input type="text" id="searchDice" placeholder="Search dice..." oninput="filterDice()" onclick="toggleDiceDropdown()">
+                        <img src="./img/search.svg" class="search-icon" alt="Search">
+                    </div>
+                    <div id="diceDropdown" class="dropdown-content"></div>
+                </div>
                 <button onclick="addDie()" data-i18n="add_die">Add Die</button>
                 <button onclick="clearDice()" data-i18n="clear">Clear</button>
                 <button onclick="startSimulation()" data-i18n="calculate">Calculate Combinations</button>
@@ -56,13 +60,13 @@
 
         <div id="results"></div>
 
+        <!-- Sección de información sobre cómo se eligen las mejores combinaciones -->
         <div class="scoring-rules">
             <h3 data-i18n="how_we_choose">How do we choose the best combinations?</h3>
-            <!-- Dynamic steps will be injected here -->
         </div>
     </div>
 
-    <!-- Carga de idioma -->
+    <!-- Carga dinámica del idioma -->
     <script>
         const userLang = navigator.language || navigator.userLanguage;
         const langCode = userLang.split('-')[0];
@@ -70,26 +74,45 @@
         document.write(`<script src="lang-${lang}.js"><\/script>`);
     </script>
 
-    <!-- Resto de scripts -->
+    <!-- Carga de scripts esenciales -->
     <script src="diceData.js"></script>
     <script src="simulator.js"></script>
 
     <script>
-        // Aplicar traducciones después de cargar todo
+        // Función para guardar un preset con validaciones básicas
+        function savePreset() {
+            const presetName = prompt("Enter preset name:");
+            if (presetName) {
+                savePresetLogic(presetName);
+            }
+        }
+
+        function savePresetLogic(presetName) {
+            const name = presetName.trim();
+            if (!name) return alert("Invalid preset name");
+            if (presets[name]) return alert("Preset already exists");
+            if (selectedDice.length === 0) return alert("No dice to save");
+
+            presets[name] = selectedDice.slice();
+            localStorage.setItem(presetsKey, JSON.stringify(presets));
+            updatePresetSelector();
+            alert("Preset saved");
+        }
+
+        // Aplica traducciones a los elementos con la propiedad data-i18n
         function applyTranslations() {
-            // Traducir elementos estáticos
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
                 if (translations[key]) {
                     if (el.tagName === 'INPUT') {
-                        el.placeholder = translations[key];
+                        el.placeholder = translations[key]; // Traducción de placeholders
                     } else {
                         el.textContent = translations[key];
                     }
                 }
             });
 
-            // Traducir sección dinámica
+            // Traducción dinámica de la sección de combinaciones
             const scoringContainer = document.querySelector('.scoring-rules');
             if (scoringContainer) {
                 scoringContainer.innerHTML = `
@@ -100,14 +123,14 @@
                 `;
             }
 
-            // Actualizar selector de presets
+            // Actualiza la lista de presets con traducción aplicada
             const presetSelect = document.getElementById('presetSelect');
             if (presetSelect) {
                 presetSelect.innerHTML = `<option value="">${translations.select_preset}</option>`;
             }
         }
 
-        // Inicialización completa
+        // Inicialización de la página
         document.addEventListener('DOMContentLoaded', () => {
             applyTranslations();
             populateDiceOptions();

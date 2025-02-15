@@ -117,13 +117,6 @@ button[onclick="startSimulation()"]:hover {
     background-color: var(--highlight-hover);
 }
 
-.preset-buttons {
-    display: flex;
-    gap: 0.5rem;
-    align-items: center;
-  }
-  
-
 /* Select and Input */
 select, input {
     background-color: var(--surface);
@@ -141,7 +134,14 @@ select:focus, input:focus {
     border-color: var(--primary);
 }
 
-/* Preset Section in Sidebar */
+/* Preset Section*/
+
+.preset-buttons {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
 .preset-section {
     margin-bottom: 1.5rem;
     padding: 1rem;
@@ -428,4 +428,77 @@ select:focus, input:focus {
     text-align: center;
     margin-top: -0.5rem;
     margin-bottom: 1rem;
+}
+
+/* Contenedor principal del dropdown */
+.dropdown-container {
+    position: relative;
+    display: inline-block;
+    width: 300px;
+}
+
+/* Caja de búsqueda con ícono */
+.search-box {
+    display: flex;
+    align-items: center;
+    background-color: #222;
+    border: 1px solid #444;
+    border-radius: 4px;
+    padding: 5px;
+}
+
+.search-box input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    color: white;
+    padding: 5px;
+    outline: none;
+}
+
+.search-icon {
+    width: 20px;
+    height: 20px;
+    margin-left: 8px;
+    cursor: pointer;
+    filter: invert(57%) sepia(72%) saturate(1841%) hue-rotate(200deg) brightness(92%) contrast(85%);
+}
+.search-icon:hover {
+    filter: invert(42%) sepia(49%) saturate(647%) hue-rotate(190deg) brightness(98%) contrast(89%);
+}
+
+/* Lista desplegable */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #222;
+    max-height: 200px;
+    overflow-y: auto;
+    width: 100%;
+    border: 1px solid #444;
+    border-radius: 4px;
+    z-index: 1000;
+    margin-top: 5px;
+}
+
+/* Opciones de la lista */
+.dropdown-content div {
+    padding: 10px;
+    cursor: pointer;
+    color: white;
+    display: flex;
+    align-items: center;
+}
+
+/* Hover en opciones */
+.dropdown-content div:hover {
+    background-color: #333;
+}
+
+/* Ícono dentro de la lista */
+.dropdown-content img {
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
+    border-radius: 4px;
 }
