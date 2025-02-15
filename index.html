@@ -23,10 +23,17 @@
                 <select id="presetSelect"></select>
                 <input type="text" id="presetName" placeholder="Preset Name">
                 <div class="preset-buttons">
-                <button onclick="savePreset(document.getElementById('presetName').value)" title="Save Preset">💾</button>
-                <button onclick="loadPreset(presetSelect.value)" title="Load Preset">📂</button>
-                <button onclick="deletePreset(presetSelect.value)" title="Delete Preset">🗑️</button>
+                    <button onclick="savePreset(document.getElementById('presetName').value)" title="Save Preset">
+                        <img src="./img/bookmark.svg" alt="Save" width="24">
+                    </button>
+                    <button onclick="loadPreset(presetSelect.value)" title="Load Preset">
+                        <img src="./img/folder.svg" alt="Load" width="24">
+                    </button>
+                    <button onclick="deletePreset(presetSelect.value)" title="Delete Preset">
+                        <img src="./img/trash.svg" alt="Delete" width="24">
+                    </button>
                 </div>
+                
             </div>
         </div>
     </div>
