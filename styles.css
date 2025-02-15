@@ -1,4 +1,4 @@
-/* styles.css */
+/* styles.css - Versión simplificada */
 :root {
     --primary-dark: #0A192F;
     --primary-color: #172A45;
@@ -8,10 +8,10 @@
     --border-color: #233554;
 }
 
-/* ========== Diseño principal ========== */
-body { 
+/* Estructura principal */
+body {
     font-family: 'Segoe UI', system-ui, sans-serif;
-    padding: 20px; 
+    padding: 20px;
     display: grid;
     grid-template-columns: 35% 65%;
     gap: 20px;
@@ -21,115 +21,109 @@ body {
     color: var(--text-primary);
 }
 
-.sidebar { 
-    padding-right: 20px; 
+.sidebar {
+    padding-right: 20px;
     border-right: 2px solid var(--border-color);
     position: sticky;
     top: 20px;
     height: fit-content;
-    align-self: start;
 }
 
-.main-content { 
-    padding-left: 20px; 
+.main-content {
+    padding-left: 20px;
     min-width: 0;
 }
 
-/* ========== Barra de progreso ========== */
-.progress-bar {
-    width: 100%;
-    height: 30px;
-    background: #112240;
-    border-radius: 15px;
-    overflow: hidden;
-    margin: 15px 0;
-}
-
-.progress-fill {
-    height: 100%;
-    background: linear-gradient(to right, var(--accent-color), #52D1A4);
-    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
-}
-
-/* ========== Resultados ========== */
-#results { 
+/* Resultados compactos */
+#results {
     margin-top: 20px;
 }
 
 .result-item {
-    margin: 15px 0;
-    padding: 20px;
+    margin: 10px 0;
+    padding: 15px;
     background: var(--primary-color);
     border-radius: 12px;
-    box-shadow: 0 3px 12px rgba(0,0,0,0.3);
-    transition: transform 0.2s;
     border: 1px solid var(--border-color);
-}
-
-.result-item:hover {
-    transform: translateY(-2px);
+    box-shadow: 0 3px 12px rgba(0,0,0,0.3);
 }
 
 .result-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
 }
 
 .result-rank {
-    font-size: 1.4rem;
+    font-size: 1.3rem;
     font-weight: bold;
     color: var(--accent-color);
 }
 
 .result-score {
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     color: #52D1A4;
     font-weight: 600;
 }
 
-/* ========== Detalles de dados ========== */
-.die-details {
+/* Dados en resultados */
+.dice-composition {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.die-group {
     position: relative;
-    padding: 12px;
-    margin: 8px 0;
-    background: #112240;
-    border-radius: 10px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-    border: 1px solid var(--border-color);
-}
-
-.die-table {
-    margin: 5px 0;
-    border-spacing: 0;
-    width: 100%;
-    table-layout: fixed;
-    overflow-x: auto;
-    display: block;
-}
-
-.die-table th, .die-table td {
-    padding: 6px;
-    font-size: 0.75em;
-    border-right: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 5px;
     text-align: center;
 }
 
-.die-table th {
-    background: #1B2A4E;
-    font-weight: 600;
-    color: var(--accent-color);
-    letter-spacing: 0.5px;
+.die-container {
+    position: relative;
+    margin-bottom: 4px;
 }
 
-.die-table td {
-    background: #0F1D38;
+.die-icon {
+    width: 55px;
+    height: 55px;
+    object-fit: contain;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    padding: 3px;
+    background: var(--primary-color);
+    transition: transform 0.2s ease;
+}
+
+.die-count {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background: var(--accent-color);
+    color: var(--primary-dark);
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    min-width: 24px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.die-name {
+    font-size: 0.75rem;
     color: var(--text-secondary);
+    max-width: 90px;
+    margin-top: 6px;
+    line-height: 1.2;
+    word-break: break-word;
 }
 
-/* ========== Elementos interactivos ========== */
+/* Controles */
 button {
     padding: 12px 24px;
     background: var(--accent-color);
@@ -139,225 +133,79 @@ button {
     cursor: pointer;
     font-weight: 600;
     transition: all 0.3s ease;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    font-size: 0.95rem;
 }
 
 button:hover {
-    background: #52D1A4;
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(100, 255, 218, 0.2);
 }
 
-button:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
-
-button:active {
-    transform: translateY(1px);
-}
-
-/* ========== Selectores y formularios ========== */
-#dieSelect {
-    padding: 12px 35px 12px 15px;
-    margin: 5px;
-    background: var(--primary-color);
-    border: 2px solid var(--border-color);
-    border-radius: 6px;
-    color: var(--text-primary);
-    font-size: 0.95rem;
-    cursor: pointer;
-    appearance: none;
-    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2364FFDA'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
-    background-repeat: no-repeat;
-    background-position: right 12px center;
-    background-size: 12px;
-}
-
-#dieSelect:hover {
-    border-color: var(--accent-color);
-    box-shadow: 0 0 8px rgba(100, 255, 218, 0.2);
-}
-
-#dieSelect:focus {
-    outline: none;
-    border-color: var(--accent-color);
-    box-shadow: 0 0 12px rgba(100, 255, 218, 0.3);
-}
-
-#dieSelect option {
-    background: var(--primary-dark);
-    color: var(--text-primary);
-    padding: 12px;
-    border-bottom: 1px solid var(--border-color);
-}
-
-/* ========== Presets ========== */
+/* Presets compactos */
 .preset-controls {
     display: flex;
-    gap: 10px;
+    gap: 8px;
     flex-wrap: wrap;
-    margin-bottom: 15px;
-    align-items: center;
-}
-
-#presetName {
-    padding: 12px;
-    background: var(--primary-color);
-    border: 2px solid var(--border-color);
-    border-radius: 6px;
-    color: var(--text-primary);
-    flex: 1;
-    min-width: 150px;
+    margin-bottom: 12px;
 }
 
 #presetSelect {
-    padding: 12px 35px 12px 15px;
-    background: var(--primary-color);
-    border: 2px solid var(--border-color);
-    border-radius: 6px;
-    color: var(--text-primary);
-    max-width: 200px;
+    padding: 10px 30px 10px 12px;
+    max-width: 160px;
+    font-size: 0.9rem;
 }
 
-/* ========== Búsqueda ========== */
-.search-input {
+/* Barra de progreso */
+.progress-bar {
     width: 100%;
-    padding: 12px;
-    margin: 10px 0;
-    background: var(--primary-color);
-    border: 2px solid var(--border-color);
-    border-radius: 6px;
-    color: var(--text-primary);
-    font-size: 0.95rem;
-}
-
-.search-input:focus {
-    outline: none;
-    border-color: var(--accent-color);
-    box-shadow: 0 0 12px rgba(100, 255, 218, 0.3);
-}
-
-/* ========== Elementos de dados ========== */
-.die-icon {
-    width: 55px;
-    height: 55px;
-    object-fit: contain;
-    border: 2px solid var(--border-color);
-    border-radius: 8px;
-    padding: 3px;
-    background: var(--primary-color);
-    transition: transform 0.3s ease;
-}
-
-.die-icon:hover {
-    transform: rotate(15deg) scale(1.1);
-    filter: drop-shadow(0 0 8px rgba(100, 255, 218, 0.3));
-}
-
-.die-icon-small {
-    width: 45px;
-    height: 45px;
-    margin-right: 10px;
-    vertical-align: middle;
-    object-fit: contain;
-    border: 1px solid var(--border-color);
-    border-radius: 5px;
-    padding: 2px;
-    background: var(--primary-color);
-    transition: transform 0.2s ease;
-}
-
-.die-icon-small:hover {
-    transform: scale(1.05);
-}
-
-.remove-btn {
-    position: absolute;
-    top: -8px;
-    right: -8px;
-    width: 25px;
     height: 25px;
-    background: #FF4D4D;
-    color: white;
-    border: none;
-    border-radius: 50%;
-    cursor: pointer;
-    font-size: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 2px 6px rgba(255, 77, 77, 0.3);
-    z-index: 1;
+    background: #112240;
+    border-radius: 15px;
+    margin: 12px 0;
 }
 
-/* ========== Componentes nuevos del simulador ========== */
-.die-group {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    margin: 5px;
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(to right, var(--accent-color), #52D1A4);
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.die-count {
-    position: absolute;
-    bottom: -8px;
-    right: -8px;
-    background: var(--accent-color);
-    color: var(--primary-dark);
-    padding: 2px 6px;
-    border-radius: 10px;
-    font-size: 0.8rem;
-    font-weight: bold;
-    z-index: 2;
+/* Responsive */
+@media (max-width: 768px) {
+    body {
+        grid-template-columns: 1fr;
+        padding: 15px;
+        gap: 15px;
+    }
+    
+    .sidebar, .main-content {
+        padding: 0;
+        border: none;
+    }
+    
+    .die-icon {
+        width: 50px;
+        height: 50px;
+    }
+    
+    #presetSelect {
+        max-width: none;
+        width: 100%;
+    }
 }
 
-.strategy-analysis {
-    margin-top: 15px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
+@media (max-width: 480px) {
+    .die-name {
+        font-size: 0.65rem;
+        max-width: 70px;
+    }
+    
+    .die-count {
+        font-size: 0.8rem;
+        padding: 3px 6px;
+    }
 }
 
-.strategy-badge {
-    display: inline-flex;
-    align-items: center;
-    padding: 6px 12px;
-    margin: 4px;
-    border-radius: 20px;
-    font-size: 0.85rem;
-    gap: 6px;
-    background: rgba(100, 255, 218, 0.15);
-    border: 1px solid var(--accent-color);
-}
-
-.triple-boost {
-    background: rgba(255, 215, 0, 0.15);
-    border-color: #FFD700;
-}
-
-.wildcard {
-    background: rgba(33, 150, 243, 0.15);
-    border-color: #2196F3;
-}
-
-.no-results {
-    padding: 25px;
-    text-align: center;
-    background: var(--primary-color);
-    border-radius: 12px;
-    border: 2px dashed var(--border-color);
-    margin: 20px 0;
-}
-
-/* ========== Tooltips ========== */
-[data-tooltip] {
-    position: relative;
-    cursor: help;
-}
-
+/* Tooltips */
 [data-tooltip]:hover::before {
     content: attr(data-tooltip);
     position: absolute;
@@ -374,219 +222,5 @@ button:active {
     text-align: center;
     border: 1px solid var(--border-color);
     box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-    z-index: 10000;
-    pointer-events: none;
-    backdrop-filter: blur(5px);
-}
-
-/* ========== Responsive ========== */
-@media (max-width: 768px) {
-    body {
-        grid-template-columns: 1fr;
-        padding: 15px;
-        gap: 15px;
-    }
-    
-    .sidebar, .main-content {
-        padding: 0;
-        border: none;
-    }
-    
-    .die-icon {
-        width: 70px;
-        height: 70px;
-    }
-    
-    .die-icon-small {
-        width: 50px;
-        height: 50px;
-    }
-    
-    .strategy-badge {
-        font-size: 0.75rem;
-    }
-}
-
-@media (max-width: 480px) {
-    h1 {
-        font-size: 1.8rem;
-    }
-    
-    .die-count {
-        font-size: 0.7rem;
-    }
-    
-    #presetSelect {
-        max-width: none;
-        width: 100%;
-    }
-}
-
-/* ========== Tipografía ========== */
-h1, h2, h3 {
-    color: var(--text-primary);
-    font-weight: 500;
-}
-
-h1 {
-    border-bottom: 2px solid var(--border-color);
-    padding-bottom: 0.5em;
-    font-size: 2rem;
-}
-
-h2 {
-    font-size: 1.5rem;
-    margin-bottom: 15px;
-}
-
-h3 {
-    font-size: 1.3rem;
-    margin: 15px 0;
-}
-
-.die-info {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 5px;
-}
-
-.die-name {
-    font-size: 0.75rem;
-    color: var(--text-secondary);
-    text-align: center;
-    max-width: 80px;
-    margin-top: 5px;
-    line-height: 1.2;
-    word-break: break-word;
-}
-
-.die-group {
-    position: relative;
-    display: inline-flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 10px;
-}
-
-.die-count {
-    position: absolute;
-    top: -8px;
-    right: -8px;
-    background: var(--accent-color);
-    color: var(--primary-dark);
-    padding: 2px 6px;
-    border-radius: 10px;
-    font-size: 0.8rem;
-    font-weight: bold;
-    z-index: 2;
-}
-
-.result-item.compact {
-    padding: 12px;
-    margin: 10px 0;
-}
-
-.compact-composition {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 8px;
-}
-
-.die-compact-group {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 2px;
-    width: 60px;
-}
-
-.die-icon-small {
-    width: 40px;
-    height: 40px;
-    margin: 0;
-}
-
-.die-name {
-    font-size: 0.6rem;
-    color: var(--text-secondary);
-    text-align: center;
-    line-height: 1.1;
-    margin-top: 2px;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-.compact-presets {
-    gap: 6px;
-    margin-bottom: 10px;
-}
-
-.compact-presets button {
-    padding: 8px;
-    min-width: 32px;
-    font-size: 0.9rem;
-    line-height: 1;
-}
-
-.compact-select {
-    padding: 8px 25px 8px 8px;
-    font-size: 0.85rem;
-    max-width: 140px;
-}
-
-.compact-input {
-    padding: 8px;
-    min-width: 60px;
-    flex: 0 1 100px;
-}
-
-.section {
-    padding: 12px;
-    margin-bottom: 15px;
-}
-
-h2 {
-    margin-bottom: 10px;
-    font-size: 1.3rem;
-}
-
-.result-item.compact {
-    padding: 8px 12px;
-    margin: 8px 0;
-}
-
-.dice-composition {
-    gap: 6px;
-    margin-top: 6px;
-}
-
-.die-icon-compact {
-    width: 40px;
-    height: 40px;
-    margin: 0;
-}
-
-.die-count {
-    font-size: 0.7rem;
-    padding: 1px 4px;
-    top: -6px;
-    right: -6px;
-}
-
-.result-header {
-    margin-bottom: 6px;
-}
-
-.result-rank {
-    font-size: 1.1rem;
-}
-
-.result-score {
-    font-size: 1.1rem;
+    z-index: 1000;
 }

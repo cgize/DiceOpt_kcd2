@@ -195,8 +195,11 @@ const displayResults = (results) => {
                     ${Object.entries(result.composition).map(([die, count]) => `
                         <div class="die-group" 
                              data-tooltip="${die}: ${diceDB[die].map((p, i) => `${i+1}=${p.toFixed(1)}%`).join(' ')}">
-                            <img src="${diceImages[die]}" class="die-icon-compact" alt="${die}">
-                            <span class="die-count">${count}</span>
+                            <div class="die-container">
+                                <img src="${diceImages[die]}" class="die-icon-adjusted" alt="${die}">
+                                <span class="die-count">${count}</span>
+                            </div>
+                            <span class="die-name">${die}</span>
                         </div>
                     `).join('')}
                 </div>
