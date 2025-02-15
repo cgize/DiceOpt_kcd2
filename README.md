@@ -12,8 +12,8 @@ Tool for determining the best dice combination in the game Farkle.
 - Simulates **1,000 rolls** per combination (based on the internal simulation logic).
 - Considers all official scoring rules.
 - Optimized for performance using **Web Workers**.
-- Supports up to **6 dice** in each combination.
-- Displays the **top 5** results instead of 20.
+- Supports up to **30** in each combination.
+- Displays the **top 5** results.
 
 ## Implemented Scoring Rules (Updated)
 - **Sequences**:
