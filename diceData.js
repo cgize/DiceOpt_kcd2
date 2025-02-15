@@ -34,7 +34,7 @@ const diceDB = {
     "Unlucky Die": [9.1,27.3,18.2,18.2,18.2,9.1],
     "Wagoner's Die": [5.6,27.8,33.3,11.1,11.1,11.1],
     "Weighted Die": [66.7,6.7,6.7,6.7,6.7,6.7],
-    "Normal Die": [16.7,16.7,16.7,16.7,16.7,16.7]
+    "Regular Die": [16.7,16.7,16.7,16.7,16.7,16.7]
 };
 
 const diceImages = {
@@ -72,25 +72,23 @@ const diceImages = {
     "Unlucky Die": "./img/die_e_icon.png",
     "Wagoner's Die": "./img/die_a_icon.png",
     "Weighted Die": "./img/die_f_icon.png",
-    "Normal Die": "./img/die_g_icon.png"
+    "Regular Die": "./img/die_g_icon.png"
 };
 
-// Función para mostrar la lista completa de dados al hacer clic en el campo de búsqueda o el ícono de búsqueda
+// ==================== FUNCIONES DEL DROPDOWN ====================
 function showAllDice() {
-    let dropdown = document.getElementById("diceDropdown");
-    dropdown.innerHTML = ""; // Limpiar lista anterior
+    const dropdown = document.getElementById("diceDropdown");
+    dropdown.innerHTML = "";
 
     Object.keys(diceDB).forEach(name => {
-        let option = document.createElement("div");
-
-        let icon = document.createElement("img");
-        icon.src = diceImages[name] || "./img/default_icon.png"; // Ícono por defecto
-
-        let text = document.createElement("span");
+        const option = document.createElement("div");
+        const icon = document.createElement("img");
+        icon.src = diceImages[name] || "./img/default_icon.png";
+        
+        const text = document.createElement("span");
         text.textContent = name;
 
-        option.appendChild(icon);
-        option.appendChild(text);
+        option.append(icon, text);
         option.onclick = () => selectDie(name);
         dropdown.appendChild(option);
     });
@@ -98,38 +96,33 @@ function showAllDice() {
     dropdown.style.display = "block";
 }
 
-// Función para alternar la lista de dados (mostrar todo o filtrar)
 function toggleDiceDropdown(event) {
-    event.stopPropagation(); // Evita que el evento cierre la lista inmediatamente
-    let dropdown = document.getElementById("diceDropdown");
-
+    event.stopPropagation();
+    const dropdown = document.getElementById("diceDropdown");
+    
     if (dropdown.style.display === "block") {
         dropdown.style.display = "none";
     } else {
-        showAllDice(); // Mostrar todos los dados al abrir
+        showAllDice();
     }
 }
 
-// Función para filtrar los dados en la lista en tiempo real
 function filterDice() {
-    let input = document.getElementById("searchDice").value.toLowerCase();
-    let dropdown = document.getElementById("diceDropdown");
-
-    dropdown.innerHTML = ""; // Limpiar opciones previas
+    const input = document.getElementById("searchDice").value.toLowerCase();
+    const dropdown = document.getElementById("diceDropdown");
+    dropdown.innerHTML = "";
 
     Object.keys(diceDB)
         .filter(name => name.toLowerCase().includes(input))
         .forEach(name => {
-            let option = document.createElement("div");
-
-            let icon = document.createElement("img");
-            icon.src = diceImages[name] || "./img/default_icon.png"; // Ícono por defecto
-
-            let text = document.createElement("span");
+            const option = document.createElement("div");
+            const icon = document.createElement("img");
+            icon.src = diceImages[name] || "./img/default_icon.png";
+            
+            const text = document.createElement("span");
             text.textContent = name;
 
-            option.appendChild(icon);
-            option.appendChild(text);
+            option.append(icon, text);
             option.onclick = () => selectDie(name);
             dropdown.appendChild(option);
         });
@@ -137,27 +130,14 @@ function filterDice() {
     dropdown.style.display = "block";
 }
 
-// Función para seleccionar un dado y cerrar la lista
 function selectDie(name) {
     document.getElementById("searchDice").value = name;
     document.getElementById("diceDropdown").style.display = "none";
 }
 
-// Cierra la lista si el usuario hace clic fuera de la barra de búsqueda y del menú desplegable
-document.addEventListener("mousedown", function(event) {
-    const dropdown = document.getElementById("diceDropdown");
-    const searchBox = document.getElementById("searchDice");
-    const searchIcon = document.getElementById("searchIcon");
-
-    if (!searchBox.contains(event.target) && !dropdown.contains(event.target) && !searchIcon.contains(event.target)) {
-        dropdown.style.display = "none";
-    }
-});
-
-// Estado de los dados seleccionados
+// ==================== GESTIÓN DE DATOS SELECCIONADOS ====================
 let selectedDice = [];
 
-// Función para añadir dados seleccionados a la lista
 function addDie() {
     const dieName = document.getElementById("searchDice").value;
     if (diceDB.hasOwnProperty(dieName)) {
@@ -166,60 +146,88 @@ function addDie() {
     }
 }
 
-// Función para limpiar la lista de dados seleccionados
 function clearDice() {
     selectedDice = [];
     updateDicePool();
 }
 
-// Función para eliminar un dado específico de la lista
-function removeDie(index) {
-    if (index >= 0 && index < selectedDice.length) {
+function removeDie(dieName) {
+    const index = selectedDice.indexOf(dieName);
+    if (index !== -1) {
         selectedDice.splice(index, 1);
         updateDicePool();
     }
 }
 
-// Función para actualizar la visualización de los dados seleccionados
 function updateDicePool() {
     const pool = document.getElementById("dicePool");
-    pool.innerHTML = selectedDice.map((die, index) => `
-        <div class="die-details">
-            <button class="remove-btn" onclick="removeDie(${index})">×</button>
-            <div class="die-title">
-                <img src="${diceImages[die]}" class="die-icon-small" alt="${die}" title="${die}">
-                ${die}
-            </div>
-        </div>
-    `).join("");
+    pool.innerHTML = "";
+
+    const diceCount = selectedDice.reduce((acc, die) => {
+        acc[die] = (acc[die] || 0) + 1;
+        return acc;
+    }, {});
+
+    Object.entries(diceCount).forEach(([die, count]) => {
+        const dieContainer = document.createElement("div");
+        dieContainer.className = "die-details";
+    
+        const removeBtn = document.createElement("button");
+        removeBtn.className = "remove-btn";
+        removeBtn.textContent = "×";
+        removeBtn.addEventListener("click", () => removeDie(die));
+    
+        const titleDiv = document.createElement("div");
+        titleDiv.className = "die-group-bar";
+    
+        const dieImg = document.createElement("img");
+        dieImg.src = diceImages[die];
+        dieImg.className = "die-icon-bar";
+        dieImg.alt = die;
+    
+        if (count > 1) {
+            const counter = document.createElement("span");
+            counter.className = "die-count";
+            counter.textContent = count;
+            titleDiv.appendChild(counter);
+        }
+    
+        const nameSpan = document.createElement("span");
+        nameSpan.className = "die-name-bar";
+        nameSpan.textContent = die;
+        
+        const imgContainer = document.createElement("div");
+        imgContainer.className = "die-image-container";
+        imgContainer.appendChild(dieImg);
+    
+        titleDiv.appendChild(imgContainer);
+        dieContainer.append(removeBtn, titleDiv, nameSpan);
+        pool.appendChild(dieContainer);
+    });
+    
 }
 
-// Sistema de presets
+// ==================== SISTEMA DE PRESETS ====================
 const presetsKey = 'dicePresets';
 let presets = JSON.parse(localStorage.getItem(presetsKey)) || {};
 
-// Función para guardar un preset con validaciones básicas
 function savePreset() {
     const presetName = prompt(translations.enter_preset_name || "Enter preset name:");
-    if (presetName) {
-        savePresetLogic(presetName);
-    }
+    if (presetName) savePresetLogic(presetName);
 }
 
-// Lógica para guardar presets en localStorage
 function savePresetLogic(presetName) {
     const name = presetName.trim();
     if (!name) return alert(translations.invalid_preset_name || "Invalid preset name");
     if (presets[name]) return alert(translations.preset_exists || "Preset already exists");
     if (selectedDice.length === 0) return alert(translations.no_dice_to_save || "No dice to save");
 
-    presets[name] = selectedDice.slice();
+    presets[name] = [...selectedDice];
     localStorage.setItem(presetsKey, JSON.stringify(presets));
     updatePresetSelector();
     alert(translations.preset_saved || "Preset saved");
 }
 
-// Función para cargar un preset guardado
 function loadPreset(presetName) {
     if (presets[presetName]) {
         selectedDice = [...presets[presetName]];
@@ -227,7 +235,6 @@ function loadPreset(presetName) {
     }
 }
 
-// Función para eliminar un preset con confirmación
 function deletePreset(presetName) {
     if (presets[presetName] && confirm(`${translations.confirm_delete || "Are you sure you want to delete"} "${presetName}"?`)) {
         delete presets[presetName];
@@ -236,7 +243,6 @@ function deletePreset(presetName) {
     }
 }
 
-// Función para actualizar la lista de presets en la interfaz
 function updatePresetSelector() {
     const presetSelect = document.getElementById('presetSelect');
     if (!presetSelect) return;
@@ -250,42 +256,46 @@ function updatePresetSelector() {
     });
 }
 
-// Función para aplicar traducciones dinámicas a los elementos con data-i18n
+// ==================== TRADUCCIONES ====================
 function applyTranslations() {
     document.querySelectorAll('[data-i18n]').forEach(el => {
         const key = el.getAttribute('data-i18n');
         if (translations[key]) {
-            if (el.tagName === 'INPUT') {
-                el.placeholder = translations[key]; // Aplica traducción a los placeholders
-            } else {
-                el.textContent = translations[key];
-            }
+            el.tagName === 'INPUT' 
+                ? el.placeholder = translations[key] 
+                : el.textContent = translations[key];
         }
     });
 
-    // Traducción dinámica de la sección de combinaciones
     const scoringContainer = document.querySelector('.scoring-rules');
     if (scoringContainer) {
         scoringContainer.innerHTML = `
             <h3>${translations.how_we_choose}</h3>
-            ${translations.simulation_steps.map(step => `
-                <div class="scoring-rule">${step}</div>
-            `).join('')}
+            ${translations.simulation_steps.map(step => `<div class="scoring-rule">${step}</div>`).join('')}
         `;
     }
-
     updatePresetSelector();
 }
 
-// Inicialización de la página y eventos
+// ==================== EVENTOS ====================
+document.addEventListener("mousedown", (event) => {
+    const dropdown = document.getElementById("diceDropdown");
+    const searchBox = document.getElementById("searchDice");
+    const searchIcon = document.getElementById("searchIcon");
+
+    if (!searchBox.contains(event.target) && 
+        !dropdown.contains(event.target) && 
+        !searchIcon.contains(event.target)) {
+        dropdown.style.display = "none";
+    }
+});
+
 document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("searchDice").addEventListener("click", toggleDiceDropdown);
-    document.getElementById("searchIcon").addEventListener("click", function(event) {
+    document.getElementById("searchIcon").addEventListener("click", (event) => {
         event.stopPropagation();
         toggleDiceDropdown();
     });
-
     applyTranslations();
-    populateDiceOptions();
     updatePresetSelector();
 });

@@ -1,12 +1,13 @@
 // simulator.js
 const calculateScore = (roll) => {
+    const sortedRoll = [...roll].sort((a, b) => a - b); // Ordenar para detectar secuencias
     const counts = Array(6).fill(0);
-    roll.forEach(n => counts[n - 1]++);
+    sortedRoll.forEach(n => counts[n - 1]++);
 
     let score = 0;
     const baseScores = [1000, 200, 300, 400, 500, 600];
 
-    // 1. Verificar secuencias (prioridad absoluta)
+    // 1. Verificar secuencias (corregido con sortedRoll)
     if (counts.every(c => c >= 1)) {
         score = 1500;
     } else if ([2, 3, 4, 5, 6].every(n => counts[n - 1] >= 1)) {
@@ -15,33 +16,42 @@ const calculateScore = (roll) => {
         score = 500;
     }
 
-    // 2. Calcular triples si no hay secuencia
+    // 2. Triples
     if (score === 0) {
         counts.forEach((count, i) => {
-            if (count >= 3) {
-                score += baseScores[i] * Math.pow(2, count - 3);
-            }
+            if (count >= 3) score += baseScores[i] * Math.pow(2, count - 3);
         });
     }
 
-    // 3. Singles solo si no hay puntuación
-    if (score === 0) {
-        score += counts[0] * 100 + counts[4] * 50;
-    }
+    // 3. Singles
+    if (score === 0) score += counts[0] * 100 + counts[4] * 50;
 
     return score;
 };
 
+// ==================== FUNCIONES DE SIMULACIÓN ====================
+const simulateRoll = (combo) => {
+    return combo.map(die => {
+        const probs = diceDB[die];
+        let rand = Math.random() * 100;
+        for (let f = 0; f < 6; f++) {
+            if (rand <= probs[f]) return f + 1;
+            rand -= probs[f];
+        }
+        return 6;
+    });
+};
+
 const getUniqueCombinations = (selectedDice) => {
-    const MAX_DICE = 20;
-    const availableDice = selectedDice.slice(0, MAX_DICE);
-    
-    const normalized = availableDice.length < 6 
-    ? [
-        ...availableDice,
-        ...Array(6 - availableDice.length).fill('Normal Die')
-      ] 
-    : availableDice;
+    const MAX_DICE = 30;
+    if (selectedDice.length > MAX_DICE) {
+        alert(translations.max_dice_error.replace("{MAX_DICE}", MAX_DICE));
+        return [];
+    }
+
+    const normalized = selectedDice.length < 6 
+        ? [...selectedDice, ...Array(6 - selectedDice.length).fill('Regular Die')] 
+        : selectedDice.slice(0, MAX_DICE);
 
     const diceCounts = normalized.reduce((acc, die) => {
         acc[die] = (acc[die] || 0) + 1;
@@ -73,21 +83,11 @@ const getUniqueCombinations = (selectedDice) => {
     return combinations;
 };
 
+// ==================== WEB WORKER ====================
 const workerCode = `
 const calculateScore = ${calculateScore.toString()};
 const diceDB = ${JSON.stringify(diceDB)};
-
-const simulateRoll = (combo) => {
-    return combo.map(die => {
-        const probs = diceDB[die];
-        let rand = Math.random() * 100;
-        for (let f = 0; f < 6; f++) {
-            if (rand <= probs[f]) return f + 1;
-            rand -= probs[f];
-        }
-        return 6;
-    });
-};
+const simulateRoll = ${simulateRoll.toString()};
 
 self.onmessage = (e) => {
     const [combinations, sims] = e.data;
@@ -127,6 +127,7 @@ const worker = new Worker(URL.createObjectURL(blob));
 let finalResults = [];
 let currentSimulation = null;
 
+// ==================== MANEJO DE SIMULACIÓN ====================
 const startSimulation = () => {
     if (selectedDice.length === 0) {
         alert(translations.no_dice_selected);
@@ -136,6 +137,8 @@ const startSimulation = () => {
     if (currentSimulation) worker.terminate();
     
     const combinations = getUniqueCombinations(selectedDice);
+    if (combinations.length === 0) return; // Si hay error en MAX_DICE
+    
     const progress = document.getElementById('progress');
     const resultsDiv = document.getElementById('results');
 
@@ -165,12 +168,13 @@ const startSimulation = () => {
         currentSimulation = null;
     };
 
-    const CHUNK_SIZE = 25;
+    const CHUNK_SIZE = 25; // Mejor rendimiento
     for (let i = 0; i < combinations.length; i += CHUNK_SIZE) {
         worker.postMessage([combinations.slice(i, i + CHUNK_SIZE), 1000]);
     }
 };
 
+// ==================== VISUALIZACIÓN DE RESULTADOS ====================
 const displayResults = (results) => {
     const resultsDiv = document.getElementById('results');
     
@@ -196,7 +200,7 @@ const displayResults = (results) => {
                         <div class="die-group" 
                              data-tooltip="${die}: ${diceDB[die].map((p, i) => `${i+1}=${p.toFixed(1)}%`).join(' ')}">
                             <div class="die-container">
-                                <img src="${diceImages[die]}" class="die-icon-adjusted" alt="${die}">
+                                <img src="${diceImages[die]}" class="die-icon-results" alt="${die}">
                                 <span class="die-count">${count}</span>
                             </div>
                             <span class="die-name">${die}</span>
@@ -206,7 +210,3 @@ const displayResults = (results) => {
             </div>
         `).join('')}`;
 };
-
-document.addEventListener('DOMContentLoaded', () => {
-    if (typeof populateDiceOptions === 'function') populateDiceOptions();
-});

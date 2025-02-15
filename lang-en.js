@@ -6,7 +6,7 @@ const translations = {
   "simulation": "Simulation",
   "add_die": "Add",
   "clear": "Clear",
-  "calculate": "Simulate",
+  "calculate": "Calculate Combinations",
   "how_we_choose": "How do we choose the best combinations?",
   "top_combinations": "Top Combinations",
   "points": "points",
