@@ -8,11 +8,11 @@ Tool for determining the best dice combination in the game Farkle.
 3. Click **"Calculate Best Combination"** to start the simulation.
 4. Wait for the results (the top **5** combinations will be displayed).
 
-## Features (Updated)
+## Features
 - Simulates **1,000 rolls** per combination (based on the internal simulation logic).
 - Considers all official scoring rules.
 - Optimized for performance using **Web Workers**.
-- Supports up to **30** in each combination.
+- Supports up to **40** in each combination.
 - Displays the **top 5** results.
 
 ## Implemented Scoring Rules (Updated)
