@@ -1,11 +1,9 @@
-/* Reset básico */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-/* Variables globales */
 :root {
     --primary: #0969da;
     --primary-hover: #115baf;
@@ -23,7 +21,6 @@
     --highlight-hover: #127e24;
 }
 
-/* Estilos generales del body */
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     background-color: var(--background);
@@ -129,13 +126,6 @@ select:focus, input:focus {
 }
 
 /* Sección de presets */
-.preset-section {
-    margin-bottom: 1.5rem;
-    padding: 1rem;
-    background-color: var(--surface-hover);
-    border-radius: 8px;
-}
-
 .preset-buttons {
     display: flex;
     gap: 0.5rem;
@@ -337,11 +327,6 @@ select:focus, input:focus {
         padding: 1rem;
     }
 
-    .controls-row {
-        display: flex;
-        flex-wrap: wrap;
-    }
-
     .simulation-controls {
         flex-wrap: wrap;
     }
@@ -482,4 +467,52 @@ select:focus, input:focus {
     height: 20px;
     margin-right: 8px;
     border-radius: 4px;
+}
+
+/* Estilo para el contador de dados */
+#diceCount {
+  font-weight: bold;
+  transition: color 0.3s ease;
+  color: var(--counter-color, inherit);
+}
+
+/* Clase para cuando se excede el límite de dados */
+#diceCount.exceed {
+  color: red;
+}
+
+
+.exceed-container {
+    position: relative;
+    display: inline-block; /* Para que ocupe solo el espacio del contenido */
+}
+
+.exceed-message {
+    display: none;
+    position: absolute;
+    bottom: 100%;         /* Ubica el mensaje sobre el contador */
+    left: 50%;            /* Centrado horizontalmente respecto al contenedor */
+    transform: translateX(-50%) translateY(-6px);
+    background-color: #222;
+    color: #fff;
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    z-index: 10;
+    white-space: nowrap;  /* Evita que el texto salte de línea */
+}
+
+.exceed-message::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 6px;
+    border-style: solid;
+    border-color: #222 transparent transparent transparent;
+}
+
+.sidebar h1 {
+    margin-bottom: 3rem; /* Ajusta este valor según sea necesario */
 }

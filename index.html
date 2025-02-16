@@ -11,7 +11,15 @@
         <h1 data-i18n="title">KCD2 Dice Optimizer</h1>
         
         <div class="section">
-            <h2 data-i18n="selected_dice">Selected Dice</h2>
+            <h2>
+                <span data-i18n="selected_dice">Selected Dice</span>
+                <span class="exceed-container">
+                    <span id="diceCount">(0)</span>
+                    <span id="exceedMessage" class="exceed-message">
+                        Has superado el límite de 30 dados
+                    </span>
+                </span>
+            </h2>
             <div id="dicePool">
                 <!-- Los dados seleccionados se renderizarán aquí dinámicamente -->
             </div>
@@ -45,7 +53,7 @@
             <div class="simulation-controls">
                 <div class="dropdown-container">
                     <div class="search-box">
-                        <input type="text" id="searchDice" placeholder="Search dice..." oninput="filterDice()" onclick="toggleDiceDropdown()">
+                        <input type="text" id="searchDice" placeholder="Search dice..." oninput="filterDice()">
                         <img src="./img/search.svg" class="search-icon" alt="Search" id="searchIcon">
                     </div>
                     <div id="diceDropdown" class="dropdown-content"></div>

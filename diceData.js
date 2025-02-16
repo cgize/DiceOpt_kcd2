@@ -165,17 +165,47 @@ function updateDicePool() {
     const pool = document.getElementById("dicePool");
     pool.innerHTML = "";
 
-    const diceCount = selectedDice.reduce((acc, die) => {
+    const diceCountValue = selectedDice.length;
+    const countDisplay = document.getElementById("diceCount");
+    const exceedMessage = document.getElementById("exceedMessage");
+
+    if (countDisplay) {
+        countDisplay.textContent = `(${diceCountValue})`;
+
+        if (diceCountValue > 30) {
+            // Activa la burbuja de alerta
+            exceedMessage.style.display = "inline-block";
+            // Aplicas tu color rojo o clase .exceed
+            countDisplay.classList.add("exceed");
+        } else {
+            // Oculta la burbuja de alerta
+            exceedMessage.style.display = "none";
+            countDisplay.classList.remove("exceed");
+        }
+
+        // Rango 24 a 30 (transición de color) si no supera 30
+        if (diceCountValue <= 30 && diceCountValue >= 24) {
+            const ratio = (diceCountValue - 24) / 6;
+            const green = Math.round(255 * (1 - ratio));
+            const computedColor = `rgb(255, ${green}, 0)`;
+            countDisplay.style.setProperty("--counter-color", computedColor);
+        } else if (diceCountValue < 24) {
+            countDisplay.style.removeProperty("--counter-color");
+        }
+    }
+
+    // Actualiza la visualización de cada dado seleccionado.
+    const diceOccurrences = selectedDice.reduce((acc, die) => {
         acc[die] = (acc[die] || 0) + 1;
         return acc;
     }, {});
 
-    Object.entries(diceCount).forEach(([die, count]) => {
+    Object.entries(diceOccurrences).forEach(([die, count]) => {
         const dieContainer = document.createElement("div");
         dieContainer.className = "die-details";
     
         const removeBtn = document.createElement("button");
-        removeBtn.className = "remove-btn";
+        removeBtn.className = "remove-btn"; 
         removeBtn.textContent = "×";
         removeBtn.addEventListener("click", () => removeDie(die));
     
@@ -206,7 +236,6 @@ function updateDicePool() {
         dieContainer.append(removeBtn, titleDiv, nameSpan);
         pool.appendChild(dieContainer);
     });
-    
 }
 
 // ==================== SISTEMA DE PRESETS ====================
@@ -303,7 +332,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("searchDice").addEventListener("click", toggleDiceDropdown);
     document.getElementById("searchIcon").addEventListener("click", (event) => {
         event.stopPropagation();
-        toggleDiceDropdown();
+        toggleDiceDropdown(event);
     });
     applyTranslations();
     updatePresetSelector();

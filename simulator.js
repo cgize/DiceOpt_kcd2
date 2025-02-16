@@ -79,7 +79,7 @@ const simulateRoll = (combo) => {
 };
 
 const getUniqueCombinations = (selectedDice) => {
-    const MAX_DICE = 40;
+    const MAX_DICE = 30;
     if (selectedDice.length > MAX_DICE) {
         alert(translations.max_dice_error.replace("{MAX_DICE}", MAX_DICE));
         return [];
