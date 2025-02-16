@@ -29,7 +29,6 @@ const translations = {
   "invalid_preset_name": "Preset name cannot be empty!",
   "search_dice": "Search dice...",
   "simulation_error": "Error during simulation!",
-  "preset_exists": "Preset name already exists!",
   "max_dice_error": "Maximum {MAX_DICE} dice allowed for performance",
   "preset_overwritten": "has been overwritten",
 };
