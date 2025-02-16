@@ -471,35 +471,35 @@ select:focus, input:focus {
 
 /* Estilo para el contador de dados */
 #diceCount {
-  font-weight: bold;
-  transition: color 0.3s ease;
-  color: var(--counter-color, inherit);
+    display: inline-block;
+    color: var(--text-secondary);
+    min-width: 28px;
+    text-align: center;
+    font-size: 16px;
+    background-color: var(--background);
+    padding: 0px 6px;
+    border-radius: 6px;
+    display: inline-block;
 }
-
-/* Clase para cuando se excede el límite de dados */
-#diceCount.exceed {
-  color: red;
-}
-
 
 .exceed-container {
     position: relative;
-    display: inline-block; /* Para que ocupe solo el espacio del contenido */
+    display: inline-block;
 }
 
 .exceed-message {
     display: none;
     position: absolute;
-    bottom: 100%;         /* Ubica el mensaje sobre el contador */
-    left: 50%;            /* Centrado horizontalmente respecto al contenedor */
+    bottom: 100%;
+    left: 50%;
     transform: translateX(-50%) translateY(-6px);
     background-color: #222;
-    color: #fff;
+    color: var(--text);
     padding: 6px 10px;
     border-radius: 4px;
     font-size: 0.9rem;
     z-index: 10;
-    white-space: nowrap;  /* Evita que el texto salte de línea */
+    white-space: nowrap;
 }
 
 .exceed-message::after {
@@ -514,5 +514,5 @@ select:focus, input:focus {
 }
 
 .sidebar h1 {
-    margin-bottom: 3rem; /* Ajusta este valor según sea necesario */
+    margin-bottom: 3rem;
 }

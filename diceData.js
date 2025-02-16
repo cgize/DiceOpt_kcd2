@@ -170,27 +170,40 @@ function updateDicePool() {
     const exceedMessage = document.getElementById("exceedMessage");
 
     if (countDisplay) {
-        countDisplay.textContent = `(${diceCountValue})`;
+        countDisplay.textContent = `${diceCountValue}`;
 
         if (diceCountValue > 30) {
-            // Activa la burbuja de alerta
+            // Mostrar la burbuja de alerta
             exceedMessage.style.display = "inline-block";
-            // Aplicas tu color rojo o clase .exceed
+            // Aplicar color rojo o clase .exceed
             countDisplay.classList.add("exceed");
         } else {
-            // Oculta la burbuja de alerta
+            // Ocultar la burbuja de alerta
             exceedMessage.style.display = "none";
             countDisplay.classList.remove("exceed");
         }
 
-        // Rango 24 a 30 (transición de color) si no supera 30
+        // Transición de color a naranja oscuro para valores entre 24 y 30
         if (diceCountValue <= 30 && diceCountValue >= 24) {
             const ratio = (diceCountValue - 24) / 6;
-            const green = Math.round(255 * (1 - ratio));
-            const computedColor = `rgb(255, ${green}, 0)`;
-            countDisplay.style.setProperty("--counter-color", computedColor);
+            // Color base #b5bac1 en RGB (181, 186, 193)
+            const startRed = 181;
+            const startGreen = 186;
+            
+            // Color final para 30 (naranja oscuro suave)
+            const endRed = 220;
+            const endGreen = 120;
+            
+            // Interpolación lineal entre colores
+            const red = Math.round(startRed + (endRed - startRed) * ratio);
+            const green = Math.round(startGreen + (endGreen - startGreen) * ratio);
+            const computedColor = `rgb(${red}, ${green}, ${Math.round(193 * (1 - ratio))})`;
+            countDisplay.style.setProperty("--text-secondary", computedColor);
         } else if (diceCountValue < 24) {
-            countDisplay.style.removeProperty("--counter-color");
+            countDisplay.style.removeProperty("--text-secondary");
+        } else if (diceCountValue > 30) {
+            // Rojo puro para valores mayores a 30
+            countDisplay.style.setProperty("--text-secondary", "rgb(255, 0, 0)");
         }
     }
 
