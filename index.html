@@ -46,7 +46,7 @@
                 <div class="dropdown-container">
                     <div class="search-box">
                         <input type="text" id="searchDice" placeholder="Search dice..." oninput="filterDice()" onclick="toggleDiceDropdown()">
-                        <img src="./img/search.svg" class="search-icon" alt="Search" id="searchIcon" >
+                        <img src="./img/search.svg" class="search-icon" alt="Search" id="searchIcon">
                     </div>
                     <div id="diceDropdown" class="dropdown-content"></div>
                 </div>
@@ -72,51 +72,12 @@
     <script>
         const userLang = navigator.language || navigator.userLanguage;
         const langCode = userLang.split('-')[0];
-        const lang = langCode === 'es' ? 'es' : 'en';
+        const lang = (langCode === 'es') ? 'es' : 'en';
         document.write(`<script src="lang-${lang}.js"><\/script>`);
     </script>
 
     <!-- Carga de scripts esenciales -->
     <script src="diceData.js"></script>
     <script src="simulator.js"></script>
-
-    <script>
-        // Aplica traducciones a los elementos con la propiedad data-i18n
-        function applyTranslations() {
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                if (translations[key]) {
-                    if (el.tagName === 'INPUT') {
-                        el.placeholder = translations[key];
-                    } else {
-                        el.textContent = translations[key];
-                    }
-                }
-            });
-
-            // Traducción dinámica de la sección de combinaciones
-            const scoringContainer = document.querySelector('.scoring-rules');
-            if (scoringContainer) {
-                scoringContainer.innerHTML = `
-                    <h3>${translations.how_we_choose}</h3>
-                    ${translations.simulation_steps.map(step => `
-                        <div class="scoring-rule">${step}</div>
-                    `).join('')}
-                `;
-            }
-
-            // Actualiza la lista de presets con traducción aplicada
-            const presetSelect = document.getElementById('presetSelect');
-            if (presetSelect) {
-                presetSelect.innerHTML = `<option value="">${translations.select_preset}</option>`;
-            }
-        }
-
-        // Inicialización de la página
-        document.addEventListener('DOMContentLoaded', () => {
-            applyTranslations();
-            updatePresetSelector();
-        });
-    </script>
 </body>
 </html>
