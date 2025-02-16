@@ -31,4 +31,5 @@ const translations = {
   "simulation_error": "Error during simulation!",
   "preset_exists": "Preset name already exists!",
   "max_dice_error": "Maximum {MAX_DICE} dice allowed for performance",
+  "preset_overwritten": "has been overwritten",
 };

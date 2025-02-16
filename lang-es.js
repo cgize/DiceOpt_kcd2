@@ -32,4 +32,5 @@ const translations = {
   "preset_exists": "¡El nombre del preset ya existe!",
   "preset_name_placeholder": "Nombre del preset",
   "max_dice_error": "Máximo {MAX_DICE} dados permitidos por rendimiento",
+  "preset_overwritten": "se ha sobrescrito",
 };

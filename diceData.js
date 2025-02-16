@@ -3,6 +3,7 @@ const diceDB = {
     "Aranka's Die": [28.6,4.8,28.6,4.8,28.6,4.8],
     "Cautious Cheater's Die": [23.8,14.3,9.5,14.3,23.8,14.3],
     "Ci Die": [13.0,13.0,13.0,13.0,13.0,34.8],
+    "Devil's Head Die": [16.7,16.7,16.7,16.7,16.7,16.7],
     "Die of Misfortune": [4.5,22.7,22.7,22.7,22.7,4.5],
     "Even Die": [6.7,26.7,6.7,26.7,6.7,26.7],
     "Favorable Die": [33.3,0.0,5.6,5.6,33.3,22.2],
@@ -41,6 +42,7 @@ const diceImages = {
     "Aranka's Die": "./img/die_f_icon.png",
     "Cautious Cheater's Die": "./img/die_b_icon.png",
     "Ci Die": "./img/die_r_icon.png",
+    "Devil's Head Die": "./img/die_r_devil_icon.png",
     "Die of Misfortune": "./img/die_c_icon.png",
     "Even Die": "./img/die_i_icon.png",
     "Favorable Die": "./img/die_j_icon.png",
@@ -219,13 +221,18 @@ function savePreset() {
 function savePresetLogic(presetName) {
     const name = presetName.trim();
     if (!name) return alert(translations.invalid_preset_name || "Invalid preset name");
-    if (presets[name]) return alert(translations.preset_exists || "Preset already exists");
     if (selectedDice.length === 0) return alert(translations.no_dice_to_save || "No dice to save");
 
+    const existed = presets.hasOwnProperty(name);
     presets[name] = [...selectedDice];
     localStorage.setItem(presetsKey, JSON.stringify(presets));
     updatePresetSelector();
-    alert(translations.preset_saved || "Preset saved");
+    
+    // Mensaje dinámico
+    const message = existed 
+        ? `${name} ${translations.preset_overwritten || "has been overwritten"}` 
+        : translations.preset_saved || "Preset saved";
+    alert(message);
 }
 
 function loadPreset(presetName) {
@@ -246,6 +253,8 @@ function deletePreset(presetName) {
 function updatePresetSelector() {
     const presetSelect = document.getElementById('presetSelect');
     if (!presetSelect) return;
+    
+    presets = JSON.parse(localStorage.getItem(presetsKey)) || {};
     
     presetSelect.innerHTML = `<option value="">${translations.select_preset || "Select a preset"}</option>`;
     Object.keys(presets).forEach(name => {

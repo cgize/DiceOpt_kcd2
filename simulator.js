@@ -43,7 +43,7 @@ const simulateRoll = (combo) => {
 };
 
 const getUniqueCombinations = (selectedDice) => {
-    const MAX_DICE = 30;
+    const MAX_DICE = 40;
     if (selectedDice.length > MAX_DICE) {
         alert(translations.max_dice_error.replace("{MAX_DICE}", MAX_DICE));
         return [];
@@ -137,7 +137,7 @@ const startSimulation = () => {
     if (currentSimulation) worker.terminate();
     
     const combinations = getUniqueCombinations(selectedDice);
-    if (combinations.length === 0) return; // Si hay error en MAX_DICE
+    if (combinations.length === 0) return;
     
     const progress = document.getElementById('progress');
     const resultsDiv = document.getElementById('results');
