@@ -1,44 +1,80 @@
 // simulator.js
 const calculateScore = (roll) => {
-    const sortedRoll = [...roll].sort((a, b) => a - b); // Ordenar para detectar secuencias
+    // Separar dados normales y comodines
+    let normalDice = [];
+    let jokers = 0;
+    
+    roll.forEach(dieResult => {
+        if (dieResult.die === "Devil's Head Die" && dieResult.value === 1) {
+            jokers++;
+        } else {
+            normalDice.push(dieResult.value);
+        }
+    });
+
+    const sortedRoll = [...normalDice].sort((a, b) => a - b);
     const counts = Array(6).fill(0);
     sortedRoll.forEach(n => counts[n - 1]++);
 
     let score = 0;
     const baseScores = [1000, 200, 300, 400, 500, 600];
 
-    // 1. Verificar secuencias (corregido con sortedRoll)
-    if (counts.every(c => c >= 1)) {
+    // Función para verificar secuencias con comodines
+    const checkSequenceWithJokers = (requiredNumbers, jokersAvailable, scoreValue) => {
+        let missing = 0;
+        requiredNumbers.forEach(n => {
+            if (counts[n - 1] === 0) missing++;
+        });
+        return missing <= jokersAvailable ? scoreValue : 0;
+    };
+
+    // 1. Verificar secuencias
+    if (checkSequenceWithJokers([1,2,3,4,5,6], jokers, 1500)) {
         score = 1500;
-    } else if ([2, 3, 4, 5, 6].every(n => counts[n - 1] >= 1)) {
+        jokers -= Math.max(0, 6 - normalDice.length);
+    } else if (checkSequenceWithJokers([2,3,4,5,6], jokers, 750)) {
         score = 750;
-    } else if ([1, 2, 3, 4, 5].every(n => counts[n - 1] >= 1)) {
+        jokers -= Math.max(0, 5 - normalDice.length);
+    } else if (checkSequenceWithJokers([1,2,3,4,5], jokers, 500)) {
         score = 500;
+        jokers -= Math.max(0, 5 - normalDice.length);
     }
 
-    // 2. Triples
+    // 2. Triples con comodines
     if (score === 0) {
         counts.forEach((count, i) => {
-            if (count >= 3) score += baseScores[i] * Math.pow(2, count - 3);
+            const needed = Math.max(3 - count, 0);
+            if (needed <= jokers) {
+                score += baseScores[i] * Math.pow(2, (count + needed) - 3);
+                jokers -= needed;
+            }
         });
     }
 
-    // 3. Singles
-    if (score === 0) score += counts[0] * 100 + counts[4] * 50;
+    // 3. Singles (sin comodines)
+    if (score === 0) {
+        score += counts[0] * 100 + counts[4] * 50;
+    }
 
     return score;
 };
 
 // ==================== FUNCIONES DE SIMULACIÓN ====================
 const simulateRoll = (combo) => {
-    return combo.map(die => {
-        const probs = diceDB[die];
+    return combo.map(dieName => {
+        const probs = diceDB[dieName];
         let rand = Math.random() * 100;
         for (let f = 0; f < 6; f++) {
-            if (rand <= probs[f]) return f + 1;
+            if (rand <= probs[f]) return {
+                die: dieName,
+                value: f + 1
+            };
             rand -= probs[f];
         }
-        return 6;
+        return {
+            die: dieName,
+            value: 6
+        };
     });
 };
 
@@ -102,7 +138,8 @@ self.onmessage = (e) => {
             const iterations = Math.min(batchSize, sims - i);
             
             for (let j = 0; j < iterations; j++) {
-                batchTotal += calculateScore(simulateRoll(combo));
+                const roll = simulateRoll(combo);
+                batchTotal += calculateScore(roll);
             }
             totalScore += batchTotal;
         }
@@ -168,7 +205,7 @@ const startSimulation = () => {
         currentSimulation = null;
     };
 
-    const CHUNK_SIZE = 25; // Mejor rendimiento
+    const CHUNK_SIZE = 25;
     for (let i = 0; i < combinations.length; i += CHUNK_SIZE) {
         worker.postMessage([combinations.slice(i, i + CHUNK_SIZE), 1000]);
     }

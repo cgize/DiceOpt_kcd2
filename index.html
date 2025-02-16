@@ -81,33 +81,13 @@
     <script src="simulator.js"></script>
 
     <script>
-        // Función para guardar un preset con validaciones básicas
-        function savePreset() {
-            const presetName = prompt("Enter preset name:");
-            if (presetName) {
-                savePresetLogic(presetName);
-            }
-        }
-
-        function savePresetLogic(presetName) {
-            const name = presetName.trim();
-            if (!name) return alert("Invalid preset name");
-            if (presets[name]) return alert("Preset already exists");
-            if (selectedDice.length === 0) return alert("No dice to save");
-
-            presets[name] = selectedDice.slice();
-            localStorage.setItem(presetsKey, JSON.stringify(presets));
-            updatePresetSelector();
-            alert("Preset saved");
-        }
-
         // Aplica traducciones a los elementos con la propiedad data-i18n
         function applyTranslations() {
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
                 if (translations[key]) {
                     if (el.tagName === 'INPUT') {
-                        el.placeholder = translations[key]; // Traducción de placeholders
+                        el.placeholder = translations[key];
                     } else {
                         el.textContent = translations[key];
                     }
