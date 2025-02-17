@@ -80,7 +80,8 @@
     <script>
         const userLang = navigator.language || navigator.userLanguage;
         const langCode = userLang.split('-')[0];
-        const lang = (langCode === 'es') ? 'es' : 'en';
+        const lang = (langCode === 'es') ? 'es' : 
+                     (langCode === 'ru') ? 'ru' : 'en';
         document.write(`<script src="lang-${lang}.js"><\/script>`);
     </script>
 
