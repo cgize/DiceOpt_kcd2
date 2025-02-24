@@ -33,4 +33,8 @@ const translations = {
   "max_dice_error": "Máximo {MAX_DICE} dados permitidos por rendimiento",
   "preset_overwritten": "se ha sobrescrito",
   "exceed_message": "Has superado el límite de 30 dados",
+  "settingsPanel": "Configuración",
+    "maxDiceLabel": "Máximo de Dados:",
+    "rollSimLabel": "Aumentar Simulación de Tiro:",
+    "batchSimLabel": "Aumentar Simulación por Lote:",
 };

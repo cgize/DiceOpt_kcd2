@@ -32,4 +32,9 @@ const translations = {
   "max_dice_error": "Для производительности разрешено не более {MAX_DICE} кубиков",
   "preset_overwritten": "был перезаписан",
   "exceed_message": "Вы превысили лимит в 30 кубиков",
+
+  "settingsPanel": "Настройки",
+    "maxDiceLabel": "Макс. Кол-во Кубиков:",
+    "rollSimLabel": "Увеличить Симуляцию Тира:",
+    "batchSimLabel": "Увеличить Симуляцию По Пакету:",
 };
