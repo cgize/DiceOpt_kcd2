@@ -255,6 +255,21 @@ const displayResults = (results) => {
 };
 
 document.addEventListener('DOMContentLoaded', function() {
+    // Mostrar/ocultar el panel de configuración
+    document.getElementById('settingsButton').addEventListener('click', function() {
+        const panel = document.getElementById('settingsPanel');
+        panel.classList.toggle('show');
+    });
+
+    // Cerrar el panel al hacer clic fuera
+    document.addEventListener('click', function(event) {
+        const panel = document.getElementById('settingsPanel');
+        const button = document.getElementById('settingsButton');
+        if (!panel.contains(event.target) && !button.contains(event.target)) {
+            panel.classList.remove('show');
+        }
+    });
+
     // Referencias a los sliders
     const maxDiceSlider = document.getElementById('maxDice');
     const rollSimSlider = document.getElementById('increaseRollSim');
