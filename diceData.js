@@ -304,13 +304,23 @@ function updatePresetSelector() {
 }
 
 // ==================== TRADUCCIONES ====================
+
+const langScript = document.createElement('script');
+langScript.src = `lang-${lang}.js`;
+langScript.onload = () => applyTranslations();
+document.head.appendChild(langScript);
+
 function applyTranslations() {
     document.querySelectorAll('[data-i18n]').forEach(el => {
         const key = el.getAttribute('data-i18n');
         if (translations[key]) {
-            el.tagName === 'INPUT' 
-                ? el.placeholder = translations[key] 
-                : el.textContent = translations[key];
+            if (el.tagName === 'INPUT') {
+                el.placeholder = translations[key];
+            } else if (el.hasAttribute('title')) {
+                el.setAttribute('title', translations[key]);
+            } else {
+                el.textContent = translations[key];
+            }
         }
     });
 

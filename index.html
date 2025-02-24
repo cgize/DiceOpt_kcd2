@@ -16,7 +16,7 @@
                 <span class="exceed-container">
                     <span id="diceCount">0</span>
                     <span id="exceedMessage" class="exceed-message" data-i18n="exceed_message">
-                        You have exceeded the limit of 30 dice
+                        You have exceeded the limit of {MAX_DICE} dice
                     </span>
                 </span>
             </h2>
@@ -27,17 +27,17 @@
         </div>
 
         <div class="section">
-            <h2>Presets</h2>
+            <h2 data-i18n="presets">Presets</h2>
             <div class="preset-controls">
                 <select id="presetSelect"></select>
                 <div class="preset-buttons">
-                    <button onclick="savePreset()" title="Save Preset">
+                    <button onclick="savePreset()" title="Save Preset" data-i18n="save_preset">
                         <img src="./img/bookmark.svg" alt="Save" width="24">
                     </button>
-                    <button onclick="loadPreset(presetSelect.value)" title="Load Preset">
+                    <button onclick="loadPreset(presetSelect.value)" title="Load Preset" data-i18n="load_preset">
                         <img src="./img/folder.svg" alt="Load" width="24">
                     </button>
-                    <button onclick="deletePreset(presetSelect.value)" title="Delete Preset">
+                    <button onclick="deletePreset(presetSelect.value)" title="Delete Preset" data-i18n="delete_preset">
                         <img src="./img/trash.svg" alt="Delete" width="24">
                     </button>
                 </div>
@@ -53,7 +53,7 @@
             <div class="simulation-controls">
                 <div class="dropdown-container">
                     <div class="search-box">
-                        <input type="text" id="searchDice" placeholder="Search dice..." oninput="filterDice()">
+                        <input type="text" id="searchDice" placeholder="Search dice..." data-i18n="search_dice_placeholder" oninput="filterDice()">
                         <img src="./img/search.svg" class="search-icon" alt="Search" id="searchIcon">
                     </div>
                     <div id="diceDropdown" class="dropdown-content"></div>
@@ -62,22 +62,21 @@
                 <button onclick="clearDice()" data-i18n="clear">Clear</button>
                 <button onclick="startSimulation()" data-i18n="calculate">Calculate Combinations</button>
                 <div class="settings-container">
-                    <button id="settingsButton" title="Settings">
+                    <button id="settingsButton" title="Settings" data-i18n="settings">
                         <img src="./img/setting.svg" alt="Settings" width="24">
                     </button>
                 
-                    <div id="settingsPanel" class="settings-panel" data-i18n="settingsPanel">
-                        <label for="maxDice" data-i18n="maxDiceLabel">Max Dice: <span id="maxDiceValue">30</span></label>
+                    <div id="settingsPanel" class="settings-panel">
+                        <label for="maxDice" data-i18n="max_dice">Max Dice: <span id="maxDiceValue">30</span></label>
                         <input type="range" id="maxDice" min="30" max="100" step="5" value="30">                        
-                        
-                        <label for="increaseRollSim" data-i18n="rollSimLabel">Increase Roll Sim: <span id="rollSimValue">1x</span></label>
+                
+                        <label for="increaseRollSim" data-i18n="increase_roll_sim">Increase Roll Sim: <span id="rollSimValue">1x</span></label>
                         <input type="range" id="increaseRollSim" min="1" max="10" value="1">
-                        
-                        <label for="increaseBatchSim" data-i18n="batchSimLabel">Increase Batch Sim: <span id="batchSimValue">1x</span></label>
+                
+                        <label for="increaseBatchSim" data-i18n="increase_batch_sim">Increase Batch Sim: <span id="batchSimValue">1x</span></label>
                         <input type="range" id="increaseBatchSim" min="1" max="10" value="1">
                     </div>
                 </div>
-
             </div>
 
             <div class="progress-bar">

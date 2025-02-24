@@ -31,7 +31,7 @@ const translations = {
   "simulation_error": "Error during simulation!",
   "max_dice_error": "Maximum {MAX_DICE} dice allowed for performance",
   "preset_overwritten": "has been overwritten",
-  "exceed_message": "You have exceeded the limit of 30 dice",
+  "exceed_message": "You have exceeded the limit of {MAX_DICE} dice",
 
   "settingsPanel": "Settings",
     "maxDiceLabel": "Max Dice:",
