@@ -78,16 +78,15 @@ const simulateRoll = (combo) => {
     });
 };
 
-const getUniqueCombinations = (selectedDice) => {
-    const MAX_DICE = 30;
-    if (selectedDice.length > MAX_DICE) {
-        alert(translations.max_dice_error.replace("{MAX_DICE}", MAX_DICE));
+const getUniqueCombinations = (selectedDice, maxDice) => {
+    if (selectedDice.length > maxDice) {
+        alert(translations.max_dice_error.replace("{MAX_DICE}", maxDice));
         return [];
     }
 
     const normalized = selectedDice.length < 6 
         ? [...selectedDice, ...Array(6 - selectedDice.length).fill('Regular Die')] 
-        : selectedDice.slice(0, MAX_DICE);
+        : selectedDice.slice(0, maxDice);
 
     const diceCounts = normalized.reduce((acc, die) => {
         acc[die] = (acc[die] || 0) + 1;
@@ -126,12 +125,11 @@ const diceDB = ${JSON.stringify(diceDB)};
 const simulateRoll = ${simulateRoll.toString()};
 
 self.onmessage = (e) => {
-    const [combinations, sims] = e.data;
+    const [combinations, sims, batchSize] = e.data; // Añadimos batchSize
     const results = [];
     
     for (const combo of combinations) {
         let totalScore = 0;
-        const batchSize = 500;
         
         for (let i = 0; i < sims; i += batchSize) {
             let batchTotal = 0;
@@ -173,7 +171,16 @@ const startSimulation = () => {
 
     if (currentSimulation) worker.terminate();
     
-    const combinations = getUniqueCombinations(selectedDice);
+    // Obtener valores de los sliders
+    const maxDice = parseInt(document.getElementById('maxDice').value);
+    const rollSimMultiplier = parseInt(document.getElementById('increaseRollSim').value);
+    const batchSimMultiplier = parseInt(document.getElementById('increaseBatchSim').value);
+    
+    const sims = 1000 * rollSimMultiplier;       // Ajustar número de simulaciones
+    const batchSize = 500 * batchSimMultiplier;  // Ajustar tamaño del batch
+    const CHUNK_SIZE = 25;                       // Mantener como está por ahora
+
+    const combinations = getUniqueCombinations(selectedDice, maxDice);
     if (combinations.length === 0) return;
     
     const progress = document.getElementById('progress');
@@ -205,9 +212,8 @@ const startSimulation = () => {
         currentSimulation = null;
     };
 
-    const CHUNK_SIZE = 25;
     for (let i = 0; i < combinations.length; i += CHUNK_SIZE) {
-        worker.postMessage([combinations.slice(i, i + CHUNK_SIZE), 1000]);
+        worker.postMessage([combinations.slice(i, i + CHUNK_SIZE), sims, batchSize]);
     }
 };
 
@@ -247,3 +253,66 @@ const displayResults = (results) => {
             </div>
         `).join('')}`;
 };
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Referencias a los sliders
+    const maxDiceSlider = document.getElementById('maxDice');
+    const rollSimSlider = document.getElementById('increaseRollSim');
+    const batchSimSlider = document.getElementById('increaseBatchSim');
+
+    // Cargar valores guardados en localStorage al iniciar
+    const savedMaxDice = localStorage.getItem('maxDice');
+    if (savedMaxDice) {
+        maxDiceSlider.value = savedMaxDice;
+        updateMaxDiceValue(savedMaxDice);
+    }
+
+    const savedRollSim = localStorage.getItem('increaseRollSim');
+    if (savedRollSim) {
+        rollSimSlider.value = savedRollSim;
+        updateRollSimValue(savedRollSim);
+    }
+
+    const savedBatchSim = localStorage.getItem('increaseBatchSim');
+    if (savedBatchSim) {
+        batchSimSlider.value = savedBatchSim;
+        updateBatchSimValue(savedBatchSim);
+    }
+
+    // Guardar valores en localStorage al cambiar los sliders
+    maxDiceSlider.addEventListener('input', function() {
+        const value = this.value;
+        localStorage.setItem('maxDice', value);
+        updateMaxDiceValue(value);
+    });
+
+    rollSimSlider.addEventListener('input', function() {
+        const value = this.value;
+        localStorage.setItem('increaseRollSim', value);
+        updateRollSimValue(value);
+    });
+
+    batchSimSlider.addEventListener('input', function() {
+        const value = this.value;
+        localStorage.setItem('increaseBatchSim', value);
+        updateBatchSimValue(value);
+    });
+
+    // Actualizar valores iniciales si no hay datos guardados
+    if (!savedMaxDice) updateMaxDiceValue(maxDiceSlider.value);
+    if (!savedRollSim) updateRollSimValue(rollSimSlider.value);
+    if (!savedBatchSim) updateBatchSimValue(batchSimSlider.value);
+});
+
+// Funciones para actualizar los valores mostrados
+function updateMaxDiceValue(value) {
+    document.getElementById('maxDiceValue').textContent = value;
+}
+
+function updateRollSimValue(value) {
+    document.getElementById('rollSimValue').textContent = `${value}x`;
+}
+
+function updateBatchSimValue(value) {
+    document.getElementById('batchSimValue').textContent = `${value}x`;
+}

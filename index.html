@@ -61,6 +61,23 @@
                 <button onclick="addDie()" data-i18n="add_die">Add Die</button>
                 <button onclick="clearDice()" data-i18n="clear">Clear</button>
                 <button onclick="startSimulation()" data-i18n="calculate">Calculate Combinations</button>
+                <div class="settings-container">
+                    <button id="settingsButton" title="Settings">
+                        <img src="./img/setting.svg" alt="Settings" width="24">
+                    </button>
+                
+                    <div id="settingsPanel" class="settings-panel">
+                        <label for="maxDice">Max Dice: <span id="maxDiceValue">30</span></label>
+                        <input type="range" id="maxDice" min="30" max="100" step="5" value="30">                        
+                
+                        <label for="increaseRollSim">Increase Roll Sim: <span id="rollSimValue">1x</span></label>
+                        <input type="range" id="increaseRollSim" min="1" max="10" value="1">
+                
+                        <label for="increaseBatchSim">Increase Batch Sim: <span id="batchSimValue">1x</span></label>
+                        <input type="range" id="increaseBatchSim" min="1" max="10" value="1">
+                    </div>
+                </div>
+
             </div>
 
             <div class="progress-bar">

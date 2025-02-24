@@ -165,6 +165,7 @@ function updateDicePool() {
     const pool = document.getElementById("dicePool");
     pool.innerHTML = "";
 
+    const maxDice = parseInt(document.getElementById('maxDice').value); // Obtener el valor actual de Max Dice
     const diceCountValue = selectedDice.length;
     const countDisplay = document.getElementById("diceCount");
     const exceedMessage = document.getElementById("exceedMessage");
@@ -172,7 +173,7 @@ function updateDicePool() {
     if (countDisplay) {
         countDisplay.textContent = `${diceCountValue}`;
 
-        if (diceCountValue > 30) {
+        if (diceCountValue > maxDice) {
             // Mostrar la burbuja de alerta
             exceedMessage.style.display = "inline-block";
             // Aplicar color rojo o clase .exceed
@@ -183,31 +184,26 @@ function updateDicePool() {
             countDisplay.classList.remove("exceed");
         }
 
-        // Transición de color a naranja oscuro para valores entre 24 y 30
-        if (diceCountValue <= 30 && diceCountValue >= 24) {
-            const ratio = (diceCountValue - 24) / 6;
-            // Color base #b5bac1 en RGB (181, 186, 193)
+        // Transición de color a naranja oscuro para valores entre (maxDice - 6) y maxDice
+        const threshold = Math.max(0, maxDice - 6);
+        if (diceCountValue <= maxDice && diceCountValue >= threshold) {
+            const ratio = (diceCountValue - threshold) / 6;
             const startRed = 181;
             const startGreen = 186;
-            
-            // Color final para 30 (naranja oscuro suave)
             const endRed = 220;
             const endGreen = 120;
-            
-            // Interpolación lineal entre colores
             const red = Math.round(startRed + (endRed - startRed) * ratio);
             const green = Math.round(startGreen + (endGreen - startGreen) * ratio);
             const computedColor = `rgb(${red}, ${green}, ${Math.round(193 * (1 - ratio))})`;
             countDisplay.style.setProperty("--text-secondary", computedColor);
-        } else if (diceCountValue < 24) {
+        } else if (diceCountValue < threshold) {
             countDisplay.style.removeProperty("--text-secondary");
-        } else if (diceCountValue > 30) {
-            // Rojo puro para valores mayores a 30
+        } else if (diceCountValue > maxDice) {
             countDisplay.style.setProperty("--text-secondary", "rgb(255, 0, 0)");
         }
     }
 
-    // Actualiza la visualización de cada dado seleccionado.
+    // Actualiza la visualización de cada dado seleccionado
     const diceOccurrences = selectedDice.reduce((acc, die) => {
         acc[die] = (acc[die] || 0) + 1;
         return acc;
