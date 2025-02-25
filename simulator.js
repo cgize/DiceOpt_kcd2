@@ -177,7 +177,7 @@ const startSimulation = () => {
     const batchSimMultiplier = parseInt(document.getElementById('increaseBatchSim').value);
     
     const sims = 5000 * rollSimMultiplier;       // Ajustar número de simulaciones
-    const batchSize = 1000 * batchSimMultiplier;  // Ajustar tamaño del batch
+    const batchSize = 500 * batchSimMultiplier;  // Ajustar tamaño del batch
     const CHUNK_SIZE = 50;                       // Mantener como está por ahora
 
     const combinations = getUniqueCombinations(selectedDice, maxDice);
